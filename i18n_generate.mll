@@ -370,6 +370,7 @@ let options = Arg.align
 let usage = "usage: ocsigen-i18n [options] [< input] [> output]"
 
 let _ = Arg.parse options (fun s -> ()) usage
+let () = if !eliom_generation then tyxml_generation := true
 
 let normalize_type ?primary_module s =
   let constr =
