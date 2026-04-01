@@ -238,7 +238,7 @@ let print_header ~tyxml output variants strings primary_module default_language 
 
 type arg = M of string | O of string
 
-let print_module_body_eliom print_expr =
+let print_module_body ?primary_module print_expr =
   let args languages =
     let rec f a =
       function [] -> List.rev a
@@ -255,64 +255,23 @@ let print_module_body_eliom print_expr =
       (fun fmt -> function
          | M x -> Format.fprintf fmt "~%s" x
          | O x -> Format.fprintf fmt "?(%s=false)" x) fmt args in
+  let get_language = match primary_module with
+    | Some pm -> pm ^ ".get_language ()"
+    | None -> "get_language ()" in
   Format.pp_print_list
     ~pp_sep:(fun fmt () -> Format.pp_print_string fmt "\n")
     (fun fmt (key, tr) ->
        let args = args (List.map snd tr) in
-       Format.fprintf fmt "let %s ?(lang = get_language ()) () %a () =\n\
+       Format.fprintf fmt "let %s ?(lang = %s) () %a () =\n\
                            match lang with\n%a"
          key
+         get_language
          print_args args
          (Format.pp_print_list
             ~pp_sep:(fun fmt () -> Format.pp_print_string fmt "\n")
             (fun fmt (language, tr) ->
                Format.fprintf fmt "| %s -> %a"
                  language print_expr tr) ) tr )
-
-
-let print_module_body primary_module print_expr =
-  let args languages =
-    let rec f a =
-      function [] -> List.rev a
-        | Var x :: t -> f (M x :: a) t
-        | Var_typed (x, _) :: t -> f (M x :: a) t
-        | Cond (x, _, _) :: t -> f (O x :: a) t
-        | _ :: t -> f a t in
-    List.map (f []) languages
-    |> List.flatten
-    |> List.sort_uniq compare in
-  let print_args fmt args =
-    Format.pp_print_list
-      ~pp_sep:(fun fmt () -> Format.pp_print_char fmt ' ')
-      (fun fmt -> function
-         | M x -> Format.fprintf fmt "~%s" x
-         | O x -> Format.fprintf fmt "?(%s=false)" x) fmt args in
-  Format.pp_print_list
-    ~pp_sep:(fun fmt () -> Format.pp_print_string fmt "\n")
-    (fun fmt (key, tr) ->
-       let args = args (List.map snd tr) in
-       match primary_module with
-       | Some pm -> 
-         (Format.fprintf fmt "let %s ?(lang = %s.get_language ()) () %a () =\n\
-                              match lang with\n%a"
-            key
-            pm
-            print_args args
-            (Format.pp_print_list
-               ~pp_sep:(fun fmt () -> Format.pp_print_string fmt "\n")
-               (fun fmt (language, tr) ->
-                  Format.fprintf fmt "| %s -> %a"
-                    language print_expr tr) ) tr )
-       | None -> 
-         (Format.fprintf fmt "let %s ?(lang = get_language ()) () %a () =\n\
-                              match lang with\n%a"
-            key
-            print_args args
-            (Format.pp_print_list
-               ~pp_sep:(fun fmt () -> Format.pp_print_string fmt "\n")
-               (fun fmt (language, tr) ->
-                  Format.fprintf fmt "| %s -> %a"
-                    language print_expr tr) ) tr ))
 
 let pp_print_list fmt printer =
   Format.fprintf fmt "[%a]"
@@ -363,18 +322,18 @@ let print_expr_string fmt key_values =
 let print_body_eliom output key_values = 
   Format.pp_print_string output "[%%shared\n" ;
   Format.fprintf output "module Tr = struct\n" ;
-  print_module_body_eliom print_expr_html output key_values ;
+  print_module_body print_expr_html output key_values ;
   Format.fprintf output "\nmodule S = struct\n" ;
-  print_module_body_eliom print_expr_string output key_values ;
+  print_module_body print_expr_string output key_values ;
   Format.fprintf output "\nend\n" ;
   Format.fprintf output "end\n" ;
   Format.pp_print_string output "]\n"
 
 let print_body ~tyxml output key_values primary_module =
   Format.fprintf output "module Tr = struct\n" ;
-  if tyxml then print_module_body primary_module print_expr_html output key_values ;
+  if tyxml then print_module_body ?primary_module print_expr_html output key_values ;
   if tyxml then Format.fprintf output "\nmodule S = struct\n" ;
-  print_module_body primary_module print_expr_string output key_values ;
+  print_module_body ?primary_module print_expr_string output key_values ;
   Format.fprintf output "\nend\n" ;
   if tyxml then Format.fprintf output "end\n"
 
