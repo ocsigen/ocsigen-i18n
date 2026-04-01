@@ -1,0 +1,50 @@
+=Introduction=
+
+Ocsigen-i18n provides internationalisation (i18n) support for
+OCaml Web applications built with [[site:/eliom|Eliom]].
+
+Translations are described in TSV (tab-separated values) files.
+A code generator produces an Eliom file with the translations,
+and a PPX extension provides a convenient syntax to use them in
+your program.
+
+==Installation
+
+{{{
+opam install ocsigen-i18n
+}}}
+
+The package provides three executables:
+* **ocsigen-i18n-generator**: generates an {{{.eliom}}} file from a TSV file
+* **ocsigen-i18n-rewriter**: PPX extension for the {{{[%i18n ...]}}} syntax
+* **ocsigen-i18n-checker**: PPX checker for i18n expressions
+
+==Quick start
+
+Create a TSV file (e.g. {{{example_i18n.tsv}}}) with your translations:
+
+{{{
+hello	Hello!	Bonjour !
+greeting	Hello {{name}}.	Bonjour {{name}}.
+}}}
+
+Generate the Eliom file:
+
+{{{
+ocsigen-i18n-generator --languages en,fr \
+  --input-file example_i18n.tsv \
+  --output-file example_i18n.eliom
+}}}
+
+Use the PPX in your code:
+
+{{{
+[%i18n hello]
+[%i18n greeting ~name:[txt "World"]]
+}}}
+
+Add the PPX to your dune file:
+
+{{{
+(preprocess (pps ocsigen-i18n -- --default-module Example_i18n))
+}}}

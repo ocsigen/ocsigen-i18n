@@ -1,0 +1,46 @@
+=Code generator=
+
+The {{{ocsigen-i18n-generator}}} command reads a TSV file and
+produces an Eliom source file ({{{.eliom}}}) containing the
+translations as OCaml functions.
+
+==Usage
+
+{{{
+ocsigen-i18n-generator [options] [< input] [> output]
+}}}
+
+==Options
+
+|{{{--languages}}}|Comma-separated languages (e.g. {{{en,fr}}}). Must be ordered as in the TSV file.|
+|{{{--default-language}}}|Set the default language (defaults to the first one in {{{--languages}}}).|
+|{{{--input-file}}}|TSV file. If omitted or set to {{{-}}}, reads from stdin.|
+|{{{--output-file}}}|Output file. If omitted or set to {{{-}}}, writes to stdout.|
+|{{{--external-type}}}|Language values come from a predefined type (do not generate the type).|
+|{{{--primary}}}|Generated file is secondary and depends on the given primary file.|
+
+==Generated code
+
+The generator produces:
+* A type {{{t}}} with one constructor per language
+* Functions {{{string_of_language}}}, {{{language_of_string}}}, and {{{guess_language_of_string}}}
+* Language management functions using Eliom scoped references ({{{get_language}}}, {{{set_language}}})
+* A module {{{Tr}}} containing HTML translation functions (using {{{Eliom_content.Html.F.txt}}})
+* A module {{{S}}} (inside {{{Tr}}}) containing string translation functions
+
+All definitions use Eliom shared sections ({{{let%shared}}}),
+making them available on both server and client.
+
+==Using multiple TSV files
+
+Use {{{--primary}}} to generate a secondary file that depends on
+a primary one. The secondary file will reuse the type and utility
+functions from the primary file:
+
+{{{
+ocsigen-i18n-generator --languages en,fr \
+  --input-file main_i18n.tsv --output-file main_i18n.eliom
+ocsigen-i18n-generator --languages en,fr \
+  --primary main_i18n.eliom \
+  --input-file extra_i18n.tsv --output-file extra_i18n.eliom
+}}}

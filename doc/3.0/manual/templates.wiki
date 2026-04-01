@@ -1,0 +1,45 @@
+=Template syntax=
+
+Translations are defined in a TSV file. The first column is the key
+(used as the OCaml function name). The following columns are the
+translations for each language, in the order specified by the
+{{{--languages}}} option.
+
+==Simple strings
+
+{{{
+foo	This is a simple key.	Ceci est une clé toute simple.
+}}}
+
+==Variables
+
+{{{{{x}}}}} defines a labelled argument {{{~x}}}:
+
+{{{
+bar	I am {{x}}.	Je suis {{x}}.
+}}}
+
+==Typed variables
+
+{{{{{x %d}}}}} defines a labelled argument {{{~x}}} with a format specifier:
+
+{{{
+bu	I am {{x %s}} ({{n %d}}).	Je suis {{x %s}} ({{n %d}}).
+}}}
+
+==Conditional values
+
+{{{{{{{c?if_true||if_false}}}}}} defines an optional boolean argument
+{{{?(c=false)}}}.
+
+{{{
+baz	There {{{c?are||is}}} apple{{{c?s||}}} here!	Il y a {{{c?des||une}}} pomme{{{c?s||}}} ici !
+}}}
+
+==Notes
+
+* Languages do not need to use the same variables. The compiler
+  generates a function taking all parameters it detects across all
+  languages.
+* A variable name used twice refers to the same argument.
+* The TSV file must end with a newline.

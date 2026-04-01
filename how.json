@@ -1,0 +1,7 @@
+{
+    "project": "ocsigen-i18n",
+    "menu": true,
+    "csw": true,
+    "templates": ["how_template/template.wiki"],
+    "manual": "manual"
+}

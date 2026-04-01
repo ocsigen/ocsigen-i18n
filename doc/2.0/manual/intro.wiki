@@ -1,0 +1,72 @@
+=Introduction=
+
+Ocsigen-i18n provides internationalisation (i18n) support for
+OCaml applications.
+
+Translations are described in TSV (tab-separated values) files.
+A code generator produces an OCaml source file with the translations,
+and a PPX extension provides a convenient syntax to use them in
+your program.
+
+Ocsigen-i18n supports three modes:
+* **Plain OCaml**: generates simple string functions (default)
+* **Tyxml**: generates HTML elements using [[https://github.com/ocsigen/tyxml|Tyxml]] ({{{--tyxml}}})
+* **Eliom**: generates client-server code for [[site:/eliom|Eliom]] apps ({{{--eliom}}})
+
+==Installation
+
+{{{
+opam install ocsigen-i18n
+}}}
+
+The package provides three executables:
+* **ocsigen-i18n**: generates an OCaml (or Eliom) file from a TSV file
+* **ocsigen-i18n-rewriter**: PPX extension for the {{{[%i18n ...]}}} syntax
+* **ocsigen-i18n-checker**: PPX checker for i18n expressions
+
+For backward compatibility, **ocsigen-i18n-generator** is provided as
+an alias for {{{ocsigen-i18n --eliom}}}.
+
+==Quick start
+
+Create a TSV file (e.g. {{{example_i18n.tsv}}}) with your translations:
+
+{{{
+hello	Hello!	Bonjour !
+greeting	Hello {{name}}.	Bonjour {{name}}.
+}}}
+
+Generate the OCaml file:
+
+{{{
+ocsigen-i18n --languages en,fr \
+  --input-file example_i18n.tsv \
+  --output-file example_i18n.ml
+}}}
+
+For an Eliom application:
+
+{{{
+ocsigen-i18n --eliom --languages en,fr \
+  --input-file example_i18n.tsv \
+  --output-file example_i18n.eliom
+}}}
+
+Use the PPX in your code:
+
+{{{
+[%i18n hello]
+[%i18n greeting ~name:"World"]
+}}}
+
+With Tyxml or Eliom, variables are HTML elements:
+
+{{{
+[%i18n greeting ~name:[txt "World"]]
+}}}
+
+Add the PPX to your dune file:
+
+{{{
+(preprocess (pps ocsigen-i18n -- --default-module Example_i18n))
+}}}
