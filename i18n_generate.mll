@@ -437,11 +437,9 @@ let _ =
        else 
          (if primary_module = None && not (!external_type) then
             (print_header ~tyxml output variants strings primary_module default_language)
-          else if not (primary_module = None) then
-            (match primary_module with
-            | Some(module_name) -> Format.fprintf output "open %s \n" module_name 
-            | None -> failwith "Not possible"
-            ) ;
+          else (match primary_module with
+            | Some module_name -> Format.fprintf output "open %s \n" module_name
+            | None -> ()) ;
            print_body ~tyxml output key_values primary_module) ;
      close_in in_chan 
      
