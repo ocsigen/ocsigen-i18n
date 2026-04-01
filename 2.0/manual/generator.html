@@ -1,0 +1,96 @@
+<html><head><title>Code generator</title><meta charset="utf8"/><meta content="width=device-width, initial-scale=1" name="viewport"/><link rel="stylesheet" href="https://ocsigen.org/css/style.css"/><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.9.0/themes/prism.min.css"/><script type="application/javascript" src="https://ocsigen.org/js/client.js">
+//<![CDATA[
+
+//]]>
+</script><script type="application/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.9.0/components/prism-core.min.js">
+//<![CDATA[
+
+//]]>
+</script><script type="application/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.9.0/components/prism-ocaml.min.js">
+//<![CDATA[
+
+//]]>
+</script><script type="application/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.9.0/components/prism-clike.min.js">
+//<![CDATA[
+
+//]]>
+</script><script type="application/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.9.0/components/prism-reason.min.js">
+//<![CDATA[
+
+//]]>
+</script><script type="application/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.9.0/components/prism-javascript.min.js">
+//<![CDATA[
+
+//]]>
+</script></head><body class="generator ocsigen-i18n"><div class="project-page"><div class="page-header"><p class="logo-ocsigen"><a href=".././../../" class="ocsimore_phrasing_link"><img src=".././../../img/ocsigen-white.svg" alt="Ocsigen"/></a>
+</p><p class="logo-subproject">i18n</p><div class="mainmenu"><p class="mainmenu-home"><a href=".././../../" class="ocsimore_phrasing_link">Home</a></p><p class="mainmenu-doc"><a href=".././../../tuto/" class="ocsimore_phrasing_link">Doc</a></p><p><a href=".././../../eliom/" class="ocsimore_phrasing_link">Eliom</a></p><p><a href=".././../../js_of_ocaml/" class="ocsimore_phrasing_link">Js_of_ocaml</a></p><p><a href=".././../../ocsigenserver/" class="ocsimore_phrasing_link">Server</a></p><p><a href=".././../../lwt/" class="ocsimore_phrasing_link">Lwt</a></p><p><a href=".././../../tyxml/" class="ocsimore_phrasing_link">Tyxml</a></p><p><a href=".././../../ocsigen-start/" class="ocsimore_phrasing_link">Start</a></p></div><form id="googlesearch" action="https://google.com/search"><input name="q" id="gsearch-box" placeholder="Search using Google"/><label for="gsearch-box"><img src="/img/search.svg" alt="" id="gsearch-icon"/></label><input type="submit" id="gsearch-submit" onclick="document.getElementById('gsearch-box').value += ' site:ocsigen.org';"/></form><aside class="how-drawer"><input id="how-drawer-toggle" type="checkbox"/><label for="how-drawer-toggle" id="how-drawer-label"><span class="how-drawer-icon"></span></label><nav class="how-drawer-content"><ul class="drawermainmenu"><li class="drawermainmenu-home"><a href=".././../../" class="ocsimore_phrasing_link">Home</a>
+</li><li class="drawermainmenu-doc"><a href=".././../../tuto/" class="ocsimore_phrasing_link">Doc</a>
+</li><li class="drawermainmenu-project"><a href=".././../../eliom/" class="ocsimore_phrasing_link">Eliom</a>
+</li><li class="drawermainmenu-project"><a href=".././../../js_of_ocaml/" class="ocsimore_phrasing_link">Js_of_ocaml</a>
+</li><li class="drawermainmenu-project"><a href=".././../../ocsigenserver/" class="ocsimore_phrasing_link">Server</a>
+</li><li class="drawermainmenu-project"><a href=".././../../lwt/" class="ocsimore_phrasing_link">Lwt</a>
+</li><li class="drawermainmenu-project"><a href=".././../../tyxml/" class="ocsimore_phrasing_link">Tyxml</a>
+</li><li class="drawermainmenu-project"><a href=".././../../ocsigen-toolkit/" class="ocsimore_phrasing_link">Toolkit</a>
+</li><li class="drawermainmenu-project"><a href=".././../../ocsigen-start/" class="ocsimore_phrasing_link">Start</a>
+</li><li class="drawermainmenu-project"><a href=".././../../ocsipersist/" class="ocsimore_phrasing_link">Ocsipersist</a>
+</li><li class="drawermainmenu-project"><a href=".././../../ocsigen-i18n/" class="ocsimore_phrasing_link">i18n</a>
+</li><li class="drawermainmenu-project"><a href=".././../../html_of_wiki/" class="ocsimore_phrasing_link">html_of_wiki</a>
+</li><li class="drawermainmenu-project"><a href=".././../../ocsimore/" class="ocsimore_phrasing_link">Ocsimore (<em>deprecated</em>)</a>
+</li><li class="drawermainmenu-page"><a href=".././../../projects" class="ocsimore_phrasing_link">Other projects</a>
+</li><li class="drawermainmenu-page"><a href=".././../../papers" class="ocsimore_phrasing_link">Research papers</a>
+</li><li class="drawermainmenu-page"><a href=".././../../credits" class="ocsimore_phrasing_link">Who does Ocsigen?</a>
+</li><li class="drawermainmenu-page"><a href=".././../../contributing" class="ocsimore_phrasing_link">Contributing</a>
+</li><li class="drawermainmenu-page"><a href=".././../../blog" class="ocsimore_phrasing_link">Blog</a>
+</li><li class="drawermainmenu-page"><a href=".././../../install" class="ocsimore_phrasing_link">Installation</a>
+</li><li class="drawermainmenu-page"><a href="https://github.com/ocsigen" class="ocsimore_phrasing_link">Source code</a>
+</li></ul><nav class="how-doctree"><h1>Ocsigen-i18n</h1><h2><a href="intro" class="ocsimore_phrasing_link">Introduction</a></h2><h2><a href="generator" class="ocsimore_phrasing_link">Code generator</a></h2><h2><a href="ppx" class="ocsimore_phrasing_link">PPX rewriter</a></h2><h2><a href="templates" class="ocsimore_phrasing_link">Template syntax</a></h2></nav></nav></aside></div><p class="reasonwarning">Warning: Reason support is experimental.
+We are looking for beta-tester and contributors.
+</p><button id="reason">Switch to </button><div class="twocols"><nav class="leftcol">Version <select class="how-versions" onchange="location = this.value;"><option value=".././../3.0/manual/generator">3.0</option><option value=".././../2.0/manual/generator" selected="selected">2.0</option><option value=".././../1.0/manual/generator">1.0</option></select><nav class="how-doctree"><h1>Ocsigen-i18n</h1><h2><a href="intro" class="ocsimore_phrasing_link">Introduction</a></h2><h2><a href="generator" class="ocsimore_phrasing_link">Code generator</a></h2><h2><a href="ppx" class="ocsimore_phrasing_link">PPX rewriter</a></h2><h2><a href="templates" class="ocsimore_phrasing_link">Template syntax</a></h2></nav></nav><article class="rightcol"><h1>Code generator</h1><p>The <span class="teletype">ocsigen-i18n</span> command reads a TSV file and produces an OCaml
+source file containing the translations as OCaml functions.
+</p><h2>Usage</h2><pre>ocsigen-i18n [options] [&lt; input] [&gt; output]
+</pre><h2>Options</h2><table><tr><td><span class="teletype">--languages</span></td><td>Comma-separated languages (e.g. <span class="teletype">en,fr</span>). Must be ordered as in the TSV file.</td></tr><tr><td><span class="teletype">--default-language</span></td><td>Set the default language (defaults to the first one in <span class="teletype">--languages</span>).</td></tr><tr><td><span class="teletype">--input-file</span></td><td>TSV file. If omitted or set to <span class="teletype">-</span>, reads from stdin.</td></tr><tr><td><span class="teletype">--output-file</span></td><td>Output file. If omitted or set to <span class="teletype">-</span>, writes to stdout.</td></tr><tr><td><span class="teletype">--external-type</span></td><td>Language values come from a predefined type (do not generate the type).</td></tr><tr><td><span class="teletype">--primary</span></td><td>Generated file is secondary and depends on the given primary file.</td></tr><tr><td><span class="teletype">--eliom</span></td><td>Generate code for a client-server Eliom app (implies <span class="teletype">--tyxml</span>).</td></tr><tr><td><span class="teletype">--tyxml</span></td><td>Generate code for a Tyxml-based app.</td></tr><tr><td><span class="teletype">--header</span></td><td>Generate only the file header (types and utility functions, without translations).</td></tr></table><h2>Generation modes</h2><h3>Default mode (no flags)</h3><p>Generates plain OCaml code:
+</p><ul><li> A type <span class="teletype">t</span> with one constructor per language
+</li><li> Functions <span class="teletype">string_of_language</span>, <span class="teletype">language_of_string</span>, and <span class="teletype">guess_language_of_string</span>
+</li><li> A list <span class="teletype">languages</span> of all variants
+</li><li> Language storage using a simple <span class="teletype">ref</span> (<span class="teletype">get_language</span>, <span class="teletype">set_language</span>)
+</li><li> A module <span class="teletype">Tr</span> containing string translation functions
+</li></ul><h3><span class="teletype">--tyxml</span> mode</h3><p>Like the default mode, but additionally:
+</p><ul><li> Opens <span class="teletype">Tyxml.Html</span>
+</li><li> The <span class="teletype">Tr</span> module generates HTML elements (using <span class="teletype">txt</span>)
+</li><li> A <span class="teletype">Tr.S</span> submodule provides string variants
+</li></ul><h3><span class="teletype">--eliom</span> mode</h3><p>Generates Eliom client-server code:
+</p><ul><li> Type and utility functions use <span class="teletype">let%shared</span>
+</li><li> Language storage uses Eliom scoped references on the server
+and a simple <span class="teletype">ref</span> on the client
+</li><li> The type <span class="teletype">t</span> has <span class="teletype">[@@deriving json]</span> for client-server communication
+</li><li> Translation modules are wrapped in <span class="teletype">[%%shared ...]</span>
+</li></ul><h2>Example output (default mode)</h2><pre>$ ocsigen-i18n --languages en,fr &lt; example.tsv
+type t = En|Fr
+exception Unknown_language of string
+let string_of_language = function
+| En -&gt; &quot;en&quot;| Fr -&gt; &quot;fr&quot;
+let language_of_string = function
+| &quot;en&quot; -&gt; En| &quot;fr&quot; -&gt; Fr| s -&gt; raise (Unknown_language s)
+...
+module Tr = struct
+let foo ?(lang = get_language ()) () () =
+  match lang with
+  | En -&gt; &quot;This is a simple key.&quot;
+  | Fr -&gt; &quot;Ceci est une clé toute simple.&quot;
+...
+end
+</pre><h2>Using multiple TSV files</h2><p>Use <span class="teletype">--primary</span> to generate a secondary file that depends on
+a primary one:
+</p><pre>ocsigen-i18n --languages en,fr \
+  --input-file main_i18n.tsv --output-file main_i18n.ml
+ocsigen-i18n --languages en,fr \
+  --primary main_i18n.ml \
+  --input-file extra_i18n.tsv --output-file extra_i18n.ml
+</pre><h2>Header-only generation</h2><p>Use <span class="teletype">--header</span> to generate only the type definitions and utility
+functions, without parsing a TSV file. This is useful when you want
+to define the type in one file and the translations in another:
+</p><pre>ocsigen-i18n --languages en,fr --header \
+  --output-file i18n_type.ml
+</pre><h2>Backward compatibility</h2><p>The command <span class="teletype">ocsigen-i18n-generator</span> is provided as an alias for
+<span class="teletype">ocsigen-i18n --eliom</span>. Existing build systems using the old
+command name will continue to work.</p></article></div></div></body></html>
