@@ -147,8 +147,8 @@ let print_generated_functions_eliom fmt ?primary_module ~default_language () =
 let print_generated_functions fmt ?primary_module ~default_language () =
   let default_lang =
     match primary_module with
-    | None -> "let default_language = " ^ default_language ^ "\n\ "
-    | Some module_name -> "let default_language = " ^ module_name ^ ".default_language \n\ "
+    | None -> "let default_language = " ^ default_language ^ "\n"
+    | Some module_name -> "let default_language = " ^ module_name ^ ".default_language\n"
   in
   let language =
     match primary_module with
