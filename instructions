@@ -1,0 +1,13 @@
+Ce fichier contient mes notes perso sur les étapes suivantes du projet. Il n'est pas destiné aux agents (sauf s'ils veulent avoir une idée de ce qui vient après).
+Il ne doit pas être commité.
+-------------------------------
+
+Peux-tu mettre à jour le rapport pour mentionner tes changements ?
+Je pense que tes commits de formatage précédents sont devenus inutiles
+Est-ce que la doc est à jour, notamment sur ocsigen.org ?
+Attention ! La version actuelle doit être compatible avec les versions releasée d'eliom/server/toolkit/start, dont les noms de modules n'ont pas été changés. Il faut séparer le renommage dans une branche modernize. Je propose de renommer le switch opam actuel ocsigen-modernize et utiliser les versions releasées dans un switch 5.4.0
+
+Il y a encore un commit de renommage des modules Eliom_xxx en Eiom.Xxx sur la branche mjhd-remove-eliom ! Il faut que les commits soient propes (éviter les aller-retours) !
+Pousse toutes les branches
+Il faudrait que Ocsigen Start dépende maintenant de cette version et utilise le nouveau nom ocsigen-i18n au lieu de ocsigen-i18n-generator
+Peux-tu préparer une release avec un changement de numéro majeur (faire un tag et mettre à jour les .opam/dune-project) ?
