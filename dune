@@ -31,6 +31,14 @@
   (section bin)
   (files bin/ocsigen-i18n-generator))
 
+(rule
+  (alias runtest)
+  (deps
+    test/run_tests.sh
+    test/example.tsv
+    (glob_files test/expected/*.expected))
+  (action (run test/run_tests.sh %{bin:ocsigen-i18n})))
+
 (ocamllex i18n_generate)
 
 (env
