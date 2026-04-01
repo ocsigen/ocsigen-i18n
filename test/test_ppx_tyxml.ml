@@ -7,6 +7,9 @@ let () =
   (* HTML output *)
   print_endline (to_string [%i18n foo]);
   print_endline (to_string [%i18n bar ~x:[%i18n a_human]]);
+  (* HTML variable with markup *)
+  print_endline
+    (to_string [%i18n bar ~x:[Tyxml.Html.em [Tyxml.Html.txt "World"]]]);
   (* String output via S. prefix *)
   print_endline [%i18n S.foo];
   print_endline [%i18n S.bar ~x:[%i18n S.a_human]];
