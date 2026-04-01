@@ -17,7 +17,7 @@ use.
 
 ```
 foo	This is a simple key.	Ceci est une clé toute simple.
-a_human a human un humain
+a_human	a human	un humain
 bar	I am {{x}}.	Je suis {{x}}.
 baz	There {{{c?are||is}}} apple{{{c?s||}}} here!	Il y a {{{c?des||une}}} pomme{{{c?s||}}} ici !
 bu	I am {{x %s}} ({{n %d}}).	Je suis {{x %s}} ({{n %d}}).
@@ -112,7 +112,7 @@ let guess_language_of_string s =
       raise e 
 let languages = [En;Fr]
 let default_language = En
-  (* We use a reference to store the lnaguage by default.
+  (* We use a reference to store the language by default.
      Customize these functions if needed.
      For example use a scoped reference if you are using Eliom
      and want the language to depend on a session/tab or session group. *)
