@@ -408,44 +408,41 @@ let _ =
       let x = normalize_type ?primary_module x in
       assert (List.mem x variants) ;
       x in
-  
-     let output = Format.formatter_of_out_channel out_chan in
-     let tyxml = !tyxml_generation in
-     if !header then (
-       if !eliom_generation then
-         (print_header_eliom output variants strings ;
-          print_list_of_languages_eliom output ~variants ;
-          print_generated_functions_eliom output ?primary_module ~default_language () 
-         )
-       else
-         (print_header ~tyxml output variants strings primary_module default_language)
-     )
-     else ( 
-       let in_chan =
-         match !input_file with
-         | "-" -> stdin
-         | file -> open_in file in
-       let lexbuf = Lexing.from_channel in_chan in
-       try
+  let output = Format.formatter_of_out_channel out_chan in
+  let tyxml = !tyxml_generation in
+  if !header then (
+    if !eliom_generation then (
+      print_header_eliom output variants strings ;
+      print_list_of_languages_eliom output ~variants ;
+      print_generated_functions_eliom output ?primary_module ~default_language ()
+    ) else
+      print_header ~tyxml output variants strings primary_module default_language
+  ) else (
+    let in_chan =
+      match !input_file with
+      | "-" -> stdin
+      | file -> open_in file in
+    let lexbuf = Lexing.from_channel in_chan in
+    (try
        let key_values = parse_lines variants [] lexbuf in
-       if !eliom_generation then 
-         (if primary_module = None && not (!external_type) then
-            (print_header_eliom output variants strings) ;
-          print_list_of_languages_eliom output ~variants ;
-          print_generated_functions_eliom output ?primary_module ~default_language () ;
-          print_body_eliom output key_values)
-       else 
-         (if primary_module = None && not (!external_type) then
-            (print_header ~tyxml output variants strings primary_module default_language)
-          else (match primary_module with
-            | Some module_name -> Format.fprintf output "open %s \n" module_name
-            | None -> ()) ;
-           print_body ~tyxml output key_values primary_module) ;
-     close_in in_chan 
-     
-
-   with Failure msg ->
-     failwith (Printf.sprintf "line: %d"
-                 lexbuf.Lexing.lex_curr_p.Lexing.pos_lnum) ) ;
+       if !eliom_generation then (
+         if primary_module = None && not !external_type then
+           print_header_eliom output variants strings ;
+         print_list_of_languages_eliom output ~variants ;
+         print_generated_functions_eliom output ?primary_module ~default_language () ;
+         print_body_eliom output key_values
+       ) else (
+         if primary_module = None && not !external_type then
+           print_header ~tyxml output variants strings primary_module default_language
+         else (match primary_module with
+           | Some module_name -> Format.fprintf output "open %s \n" module_name
+           | None -> ()) ;
+         print_body ~tyxml output key_values primary_module
+       )
+     with Failure _ ->
+       failwith (Printf.sprintf "line: %d"
+                   lexbuf.Lexing.lex_curr_p.Lexing.pos_lnum)) ;
+    close_in in_chan
+  ) ;
   close_out out_chan
 }
