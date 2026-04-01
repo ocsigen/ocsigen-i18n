@@ -101,7 +101,7 @@ let print_list_of_languages fmt ~variants =
 
 let print_type_eliom fmt ~variants =
   Format.fprintf fmt
-    "[%%%%shared type t = %a]\n\
+    "[%%%%shared type t = %a [@@@@deriving json]]\n\
      [%%%%shared exception Unknown_language of string]\n"
     (Format.pp_print_list
       ~pp_sep:(fun fmt () -> Format.pp_print_string fmt "|")
