@@ -167,13 +167,10 @@ let print_generated_functions fmt ?primary_module ~default_language () =
    \n\
   "
 
-
-  
 (** Print the function [string_of_language] returning the string representation of a
     value o type t. The string representation is simply the value as a string. For
     example, the string representation of [Us] is ["Us"]
 *)
-
 
 let helper_print_string_of_language ~eliom fmt ~variants ~strings =
   Format.pp_print_string fmt
@@ -185,8 +182,6 @@ let helper_print_string_of_language ~eliom fmt ~variants ~strings =
 let print_string_of_language_eliom = helper_print_string_of_language ~eliom:true
 
 let print_string_of_language = helper_print_string_of_language ~eliom:false
-  
-
 
 (** Print the function [language_of_string] returning the value of type t which
     corresponds to the given string. The exception [Unknown_language] is raised with
@@ -215,7 +210,7 @@ let helper_print_guess_language_of_string ~eliom fmt =
       raise e \n")
 
 let print_guess_language_of_string_eliom =
-  helper_print_guess_language_of_string ~eliom:true 
+  helper_print_guess_language_of_string ~eliom:true
 
 let print_guess_language_of_string =
   helper_print_guess_language_of_string ~eliom:false
@@ -319,7 +314,7 @@ let print_expr_string fmt key_values =
     Format.fprintf fmt "String.concat \"\" " ;
     pp_print_list fmt print_key_value key_values
 
-let print_body_eliom output key_values = 
+let print_body_eliom output key_values =
   Format.pp_print_string output "[%%shared\n" ;
   Format.fprintf output "module Tr = struct\n" ;
   print_module_body print_expr_html output key_values ;
