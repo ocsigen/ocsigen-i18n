@@ -83,7 +83,7 @@ and parse_string_2 buffer = parse
   | _ as c { Buffer.add_char buffer c
     ; parse_string_2 buffer lexbuf }
 
-    {
+{
 
 let print_list_of_languages_eliom fmt ~variants =
   Format.fprintf fmt
