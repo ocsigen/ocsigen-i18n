@@ -23,23 +23,29 @@ open Ppxlib
 (* Usage: i18n_ppx_checker.native files < i18n.tsv *)
 
 let expand ident ~loc:location ~path:_ expr =
-  Ppxlib.Ast_pattern.
-  (parse (pexp_ident __ |> map1 ~f:(ident expr)
-          ||| (pexp_apply (pexp_ident __) (many __)
-               |> map2 ~f:(fun id _ -> ident expr id))))
-    location expr (fun x -> x)
+  Ppxlib.Ast_pattern.(
+    parse
+      (pexp_ident __
+      |> map1 ~f:(ident expr)
+      ||| (pexp_apply (pexp_ident __) (many __)
+          |> map2 ~f:(fun id _ -> ident expr id)))) location expr (fun x -> x)
 
 let check files =
   let k =
     let tab_re = Str.regexp "\t" in
-    let rec read acc = match input_line stdin with
-      | line -> begin match Str.split_delim tab_re line with
+    let rec read acc =
+      match input_line stdin with
+      | line -> begin
+        match Str.split_delim tab_re line with
         | a :: _ -> read (String.escaped a :: acc)
-        | _ -> assert false end
+        | _ -> assert false
+      end
       | exception End_of_file -> acc
-    in read [] in
+    in
+    read []
+  in
   let keys = Hashtbl.create (List.length files) in
-  List.iter (fun x -> Hashtbl.add keys x false) k ;
+  List.iter (fun x -> Hashtbl.add keys x false) k;
   let ident expr i =
     let name i =
       match i with
@@ -48,12 +54,11 @@ let check files =
       | Lapply _ -> assert false
     in
     Hashtbl.replace keys (name i) true;
-    expr in
+    expr
+  in
   let expand = expand ident in
   let extension =
-    Ppxlib.Extension.declare
-      "i18n"
-      Ppxlib.Extension.Context.expression
+    Ppxlib.Extension.declare "i18n" Ppxlib.Extension.Context.expression
       Ppxlib.Ast_pattern.(single_expr_payload __)
       expand
   in
@@ -62,14 +67,14 @@ let check files =
   let process_file file =
     let ch = open_in file in
     let ast = Ppxlib.Parse.implementation (Lexing.from_channel ch) in
-    ignore (iterator#structure
-              (Expansion_context.Base.top_level
-                 ~tool_name:"i18n_ppx_checker"
-                 ~file_path:file ~input_name:file)
-              ast) ;
-    close_in ch in
-  List.iter process_file files ;
+    ignore
+      (iterator#structure
+         (Expansion_context.Base.top_level ~tool_name:"i18n_ppx_checker"
+            ~file_path:file ~input_name:file)
+         ast);
+    close_in ch
+  in
+  List.iter process_file files;
   Hashtbl.iter (fun x b -> if not b then print_endline x) keys
 
-let _ =
-  check (List.tl (Array.to_list Sys.argv))
+let _ = check (List.tl (Array.to_list Sys.argv))
