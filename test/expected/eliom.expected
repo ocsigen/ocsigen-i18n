@@ -39,12 +39,16 @@ match lang with
 | Fr -> List.flatten [[txt "Je suis "];x;[txt "."]]
 let baz ?(lang = get_language ()) () ?(c=false) () =
 match lang with
-| En -> List.flatten [[txt "There "];[txt (if c then "are" else "is")];[txt " apple"];[txt (if c then "s" else "")];[txt " here!"]]
+| En -> List.flatten [[txt "There "];[txt (if c then "are" else "is an")];[txt " apple"];[txt (if c then "s" else "")];[txt " here!"]]
 | Fr -> List.flatten [[txt "Il y a "];[txt (if c then "des" else "une")];[txt " pomme"];[txt (if c then "s" else "")];[txt " ici !"]]
 let bu ?(lang = get_language ()) () ~n ~x () =
 match lang with
 | En -> List.flatten [[txt "I am "];[txt (Printf.sprintf "%s" x)];[txt " ("];[txt (Printf.sprintf "%d" n)];[txt ")."]]
 | Fr -> List.flatten [[txt "Je suis "];[txt (Printf.sprintf "%s" x)];[txt " ("];[txt (Printf.sprintf "%d" n)];[txt ")."]]
+let someone_important ?(lang = get_language ()) ()  () =
+match lang with
+| En -> [txt "someone important"]
+| Fr -> [txt "quelqu'un d'important"]
 module S = struct
 let foo ?(lang = get_language ()) ()  () =
 match lang with
@@ -60,12 +64,16 @@ match lang with
 | Fr -> String.concat "" ["Je suis ";x;"."]
 let baz ?(lang = get_language ()) () ?(c=false) () =
 match lang with
-| En -> String.concat "" ["There ";(if c then "are" else "is");" apple";(if c then "s" else "");" here!"]
+| En -> String.concat "" ["There ";(if c then "are" else "is an");" apple";(if c then "s" else "");" here!"]
 | Fr -> String.concat "" ["Il y a ";(if c then "des" else "une");" pomme";(if c then "s" else "");" ici !"]
 let bu ?(lang = get_language ()) () ~n ~x () =
 match lang with
 | En -> String.concat "" ["I am ";(Printf.sprintf "%s" x);" (";(Printf.sprintf "%d" n);")."]
 | Fr -> String.concat "" ["Je suis ";(Printf.sprintf "%s" x);" (";(Printf.sprintf "%d" n);")."]
+let someone_important ?(lang = get_language ()) ()  () =
+match lang with
+| En -> "someone important"
+| Fr -> "quelqu'un d'important"
 end
 end
 ]
