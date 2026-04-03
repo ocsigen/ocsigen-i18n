@@ -45,24 +45,52 @@
 </li><li class="drawermainmenu-page"><a href="https://github.com/ocsigen" class="ocsimore_phrasing_link">Source code</a>
 </li></ul><nav class="how-doctree"><h1>Ocsigen-i18n</h1><h2><a href="intro" class="ocsimore_phrasing_link">Introduction</a></h2><h2><a href="generator" class="ocsimore_phrasing_link">Code generator</a></h2><h2><a href="ppx" class="ocsimore_phrasing_link">PPX rewriter</a></h2><h2><a href="templates" class="ocsimore_phrasing_link">Template syntax</a></h2></nav></nav></aside></div><p class="reasonwarning">Warning: Reason support is experimental.
 We are looking for beta-tester and contributors.
-</p><button id="reason">Switch to </button><div class="twocols"><nav class="leftcol">Version <select class="how-versions" onchange="location = this.value;"><option value=".././../dev/manual/generator">dev</option><option value=".././../2.0/manual/generator">2.0</option><option value=".././../1.0/manual/generator" selected="selected">1.0</option></select><nav class="how-doctree"><h1>Ocsigen-i18n</h1><h2><a href="intro" class="ocsimore_phrasing_link">Introduction</a></h2><h2><a href="generator" class="ocsimore_phrasing_link">Code generator</a></h2><h2><a href="ppx" class="ocsimore_phrasing_link">PPX rewriter</a></h2><h2><a href="templates" class="ocsimore_phrasing_link">Template syntax</a></h2></nav></nav><article class="rightcol"><h1>Code generator</h1><p>The <span class="teletype">ocsigen-i18n-generator</span> command reads a TSV file and
-produces an Eliom source file (<span class="teletype">.eliom</span>) containing the
-translations as OCaml functions.
-</p><h2>Usage</h2><pre>ocsigen-i18n-generator [options] [&lt; input] [&gt; output]
-</pre><h2>Options</h2><table><tr><td><span class="teletype">--languages</span></td><td>Comma-separated languages (e.g. <span class="teletype">en,fr</span>). Must be ordered as in the TSV file.</td></tr><tr><td><span class="teletype">--default-language</span></td><td>Set the default language (defaults to the first one in <span class="teletype">--languages</span>).</td></tr><tr><td><span class="teletype">--input-file</span></td><td>TSV file. If omitted or set to <span class="teletype">-</span>, reads from stdin.</td></tr><tr><td><span class="teletype">--output-file</span></td><td>Output file. If omitted or set to <span class="teletype">-</span>, writes to stdout.</td></tr><tr><td><span class="teletype">--external-type</span></td><td>Language values come from a predefined type (do not generate the type).</td></tr><tr><td><span class="teletype">--primary</span></td><td>Generated file is secondary and depends on the given primary file.</td></tr></table><h2>Generated code</h2><p>The generator produces:
+</p><button id="reason">Switch to </button><div class="twocols"><nav class="leftcol">Version <select class="how-versions" onchange="location = this.value;"><option value=".././../dev/manual/generator">dev</option><option value=".././../5.0/manual/generator" selected="selected">5.0</option><option value=".././../4.0/manual/generator">4.0</option></select><nav class="how-doctree"><h1>Ocsigen-i18n</h1><h2><a href="intro" class="ocsimore_phrasing_link">Introduction</a></h2><h2><a href="generator" class="ocsimore_phrasing_link">Code generator</a></h2><h2><a href="ppx" class="ocsimore_phrasing_link">PPX rewriter</a></h2><h2><a href="templates" class="ocsimore_phrasing_link">Template syntax</a></h2></nav></nav><article class="rightcol"><h1>Code generator</h1><p>The <span class="teletype">ocsigen-i18n</span> command reads a TSV file and produces an OCaml
+source file containing the translations as OCaml functions.
+</p><h2>Usage</h2><pre>ocsigen-i18n [options] [&lt; input] [&gt; output]
+</pre><h2>Options</h2><table><tr><td><span class="teletype">--languages</span></td><td>Comma-separated languages (e.g. <span class="teletype">en,fr</span>). Must be ordered as in the TSV file.</td></tr><tr><td><span class="teletype">--default-language</span></td><td>Set the default language (defaults to the first one in <span class="teletype">--languages</span>).</td></tr><tr><td><span class="teletype">--input-file</span></td><td>TSV file. If omitted or set to <span class="teletype">-</span>, reads from stdin.</td></tr><tr><td><span class="teletype">--output-file</span></td><td>Output file. If omitted or set to <span class="teletype">-</span>, writes to stdout.</td></tr><tr><td><span class="teletype">--external-type</span></td><td>Language values come from a predefined type (do not generate the type).</td></tr><tr><td><span class="teletype">--primary</span></td><td>Generated file is secondary and depends on the given primary file.</td></tr><tr><td><span class="teletype">--eliom</span></td><td>Generate code for a client-server Eliom app (implies <span class="teletype">--tyxml</span>).</td></tr><tr><td><span class="teletype">--tyxml</span></td><td>Generate code for a Tyxml-based app.</td></tr><tr><td><span class="teletype">--header</span></td><td>Generate only the file header (types and utility functions, without translations).</td></tr></table><h2>Generation modes</h2><h3>Default mode (no flags)</h3><p>Generates plain OCaml code:
 </p><ul><li> A type <span class="teletype">t</span> with one constructor per language
 </li><li> Functions <span class="teletype">string_of_language</span>, <span class="teletype">language_of_string</span>, and <span class="teletype">guess_language_of_string</span>
-</li><li> Language management functions using Eliom scoped references (<span class="teletype">get_language</span>, <span class="teletype">set_language</span>)
-</li><li> A module <span class="teletype">Tr</span> containing HTML translation functions (using <span class="teletype">Eliom_content.Html.F.txt</span>)
-</li><li> A module <span class="teletype">S</span> (inside <span class="teletype">Tr</span>) containing string translation functions
-</li></ul><p>All definitions use Eliom shared sections (<span class="teletype">let%shared</span>),
-making them available on both server and client.
-</p><h2>Using multiple TSV files</h2><p>Use <span class="teletype">--primary</span> to generate a secondary file that depends on
-a primary one. The secondary file will reuse the type and utility
-functions from the primary file:
-</p><pre>ocsigen-i18n-generator --languages en,fr \
-  --input-file main_i18n.tsv --output-file main_i18n.eliom
-ocsigen-i18n-generator --languages en,fr \
-  --primary main_i18n.eliom \
-  --input-file extra_i18n.tsv --output-file extra_i18n.eliom
-</pre></article></div></div></body></html>
+</li><li> A list <span class="teletype">languages</span> of all variants
+</li><li> Language storage using a simple <span class="teletype">ref</span> (<span class="teletype">get_language</span>, <span class="teletype">set_language</span>)
+</li><li> A module <span class="teletype">Tr</span> containing string translation functions
+</li></ul><h3><span class="teletype">--tyxml</span> mode</h3><p>Like the default mode, but additionally:
+</p><ul><li> Opens <span class="teletype">Tyxml.Html</span>
+</li><li> The <span class="teletype">Tr</span> module generates HTML elements (using <span class="teletype">txt</span>)
+</li><li> A <span class="teletype">Tr.S</span> submodule provides string variants
+</li></ul><h3><span class="teletype">--eliom</span> mode</h3><p>Generates Eliom client-server code:
+</p><ul><li> Type and utility functions use <span class="teletype">let%shared</span>
+</li><li> Language storage uses Eliom scoped references on the server
+and a simple <span class="teletype">ref</span> on the client
+</li><li> The type <span class="teletype">t</span> has <span class="teletype">[@@deriving json]</span> for client-server communication
+</li><li> Translation modules are wrapped in <span class="teletype">[%%shared ...]</span>
+</li></ul><h2>Example output (default mode)</h2><pre>$ ocsigen-i18n --languages en,fr &lt; example.tsv
+type t = En|Fr
+exception Unknown_language of string
+let string_of_language = function
+| En -&gt; &quot;en&quot;| Fr -&gt; &quot;fr&quot;
+let language_of_string = function
+| &quot;en&quot; -&gt; En| &quot;fr&quot; -&gt; Fr| s -&gt; raise (Unknown_language s)
+...
+module Tr = struct
+let foo ?(lang = get_language ()) () () =
+  match lang with
+  | En -&gt; &quot;This is a simple key.&quot;
+  | Fr -&gt; &quot;Ceci est une clé toute simple.&quot;
+...
+end
+</pre><h2>Using multiple TSV files</h2><p>Use <span class="teletype">--primary</span> to generate a secondary file that depends on
+a primary one:
+</p><pre>ocsigen-i18n --languages en,fr \
+  --input-file main_i18n.tsv --output-file main_i18n.ml
+ocsigen-i18n --languages en,fr \
+  --primary main_i18n.ml \
+  --input-file extra_i18n.tsv --output-file extra_i18n.ml
+</pre><h2>Header-only generation</h2><p>Use <span class="teletype">--header</span> to generate only the type definitions and utility
+functions, without parsing a TSV file. This is useful when you want
+to define the type in one file and the translations in another:
+</p><pre>ocsigen-i18n --languages en,fr --header \
+  --output-file i18n_type.ml
+</pre><h2>Backward compatibility</h2><p>The command <span class="teletype">ocsigen-i18n-generator</span> is provided as an alias for
+<span class="teletype">ocsigen-i18n --eliom</span>. Existing build systems using the old
+command name will continue to work.</p></article></div></div></body></html>

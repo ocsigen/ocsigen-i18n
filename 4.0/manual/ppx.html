@@ -1,4 +1,4 @@
-<html><head><title>Template syntax</title><meta charset="utf8"/><meta content="width=device-width, initial-scale=1" name="viewport"/><link rel="stylesheet" href="https://ocsigen.org/css/style.css"/><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.9.0/themes/prism.min.css"/><script type="application/javascript" src="https://ocsigen.org/js/client.js">
+<html><head><title>PPX rewriter</title><meta charset="utf8"/><meta content="width=device-width, initial-scale=1" name="viewport"/><link rel="stylesheet" href="https://ocsigen.org/css/style.css"/><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.9.0/themes/prism.min.css"/><script type="application/javascript" src="https://ocsigen.org/js/client.js">
 //<![CDATA[
 
 //]]>
@@ -22,7 +22,7 @@
 //<![CDATA[
 
 //]]>
-</script></head><body class="templates ocsigen-i18n"><div class="project-page"><div class="page-header"><p class="logo-ocsigen"><a href=".././../../" class="ocsimore_phrasing_link"><img src=".././../../img/ocsigen-white.svg" alt="Ocsigen"/></a>
+</script></head><body class="ppx ocsigen-i18n"><div class="project-page"><div class="page-header"><p class="logo-ocsigen"><a href=".././../../" class="ocsimore_phrasing_link"><img src=".././../../img/ocsigen-white.svg" alt="Ocsigen"/></a>
 </p><p class="logo-subproject">i18n</p><div class="mainmenu"><p class="mainmenu-home"><a href=".././../../" class="ocsimore_phrasing_link">Home</a></p><p class="mainmenu-doc"><a href=".././../../tuto/" class="ocsimore_phrasing_link">Doc</a></p><p><a href=".././../../eliom/" class="ocsimore_phrasing_link">Eliom</a></p><p><a href=".././../../js_of_ocaml/" class="ocsimore_phrasing_link">Js_of_ocaml</a></p><p><a href=".././../../ocsigenserver/" class="ocsimore_phrasing_link">Server</a></p><p><a href=".././../../lwt/" class="ocsimore_phrasing_link">Lwt</a></p><p><a href=".././../../tyxml/" class="ocsimore_phrasing_link">Tyxml</a></p><p><a href=".././../../ocsigen-start/" class="ocsimore_phrasing_link">Start</a></p></div><form id="googlesearch" action="https://google.com/search"><input name="q" id="gsearch-box" placeholder="Search using Google"/><label for="gsearch-box"><img src="/img/search.svg" alt="" id="gsearch-icon"/></label><input type="submit" id="gsearch-submit" onclick="document.getElementById('gsearch-box').value += ' site:ocsigen.org';"/></form><aside class="how-drawer"><input id="how-drawer-toggle" type="checkbox"/><label for="how-drawer-toggle" id="how-drawer-label"><span class="how-drawer-icon"></span></label><nav class="how-drawer-content"><ul class="drawermainmenu"><li class="drawermainmenu-home"><a href=".././../../" class="ocsimore_phrasing_link">Home</a>
 </li><li class="drawermainmenu-doc"><a href=".././../../tuto/" class="ocsimore_phrasing_link">Doc</a>
 </li><li class="drawermainmenu-project"><a href=".././../../eliom/" class="ocsimore_phrasing_link">Eliom</a>
@@ -45,20 +45,21 @@
 </li><li class="drawermainmenu-page"><a href="https://github.com/ocsigen" class="ocsimore_phrasing_link">Source code</a>
 </li></ul><nav class="how-doctree"><h1>Ocsigen-i18n</h1><h2><a href="intro" class="ocsimore_phrasing_link">Introduction</a></h2><h2><a href="generator" class="ocsimore_phrasing_link">Code generator</a></h2><h2><a href="ppx" class="ocsimore_phrasing_link">PPX rewriter</a></h2><h2><a href="templates" class="ocsimore_phrasing_link">Template syntax</a></h2></nav></nav></aside></div><p class="reasonwarning">Warning: Reason support is experimental.
 We are looking for beta-tester and contributors.
-</p><button id="reason">Switch to </button><div class="twocols"><nav class="leftcol">Version <select class="how-versions" onchange="location = this.value;"><option value=".././../dev/manual/templates">dev</option><option value=".././../2.0/manual/templates">2.0</option><option value=".././../1.0/manual/templates" selected="selected">1.0</option></select><nav class="how-doctree"><h1>Ocsigen-i18n</h1><h2><a href="intro" class="ocsimore_phrasing_link">Introduction</a></h2><h2><a href="generator" class="ocsimore_phrasing_link">Code generator</a></h2><h2><a href="ppx" class="ocsimore_phrasing_link">PPX rewriter</a></h2><h2><a href="templates" class="ocsimore_phrasing_link">Template syntax</a></h2></nav></nav><article class="rightcol"><h1>Template syntax</h1><p>Translations are defined in a TSV file. The first column is the key
-(used as the OCaml function name). The following columns are the
-translations for each language, in the order specified by the
-<span class="teletype">--languages</span> option.
-</p><h2>Simple strings</h2><pre>foo	This is a simple key.	Ceci est une clé toute simple.
-</pre><h2>Variables</h2><p><span class="teletype">{{x}}</span> defines a labelled argument <span class="teletype">~x</span>:
-</p><pre>bar	I am {{x}}.	Je suis {{x}}.
-</pre><h2>Typed variables</h2><p><span class="teletype">{{x %d}}</span> defines a labelled argument <span class="teletype">~x</span> with a format specifier:
-</p><pre>bu	I am {{x %s}} ({{n %d}}).	Je suis {{x %s}} ({{n %d}}).
-</pre><h2>Conditional values</h2><p><span class="teletype">{{{{c?if_true||if_false}}}</span> defines an optional boolean argument
-<span class="teletype">?(c=false)</span>.
-</p><pre>baz	There {{{c?are||is}}} apple{{{c?s||}}} here!	Il y a {{{c?des||une}}} pomme{{{c?s||}}} ici !
-</pre><h2>Notes</h2><ul><li> Languages do not need to use the same variables. The compiler
-generates a function taking all parameters it detects across all
-languages.
-</li><li> A variable name used twice refers to the same argument.
-</li><li> The TSV file must end with a newline.</li></ul></article></div></div></body></html>
+</p><button id="reason">Switch to </button><div class="twocols"><nav class="leftcol">Version <select class="how-versions" onchange="location = this.value;"><option value=".././../dev/manual/ppx">dev</option><option value=".././../5.0/manual/ppx">5.0</option><option value=".././../4.0/manual/ppx" selected="selected">4.0</option></select><nav class="how-doctree"><h1>Ocsigen-i18n</h1><h2><a href="intro" class="ocsimore_phrasing_link">Introduction</a></h2><h2><a href="generator" class="ocsimore_phrasing_link">Code generator</a></h2><h2><a href="ppx" class="ocsimore_phrasing_link">PPX rewriter</a></h2><h2><a href="templates" class="ocsimore_phrasing_link">Template syntax</a></h2></nav></nav><article class="rightcol"><h1>PPX rewriter</h1><p>The <span class="teletype">ocsigen-i18n-rewriter</span> PPX extension transforms
+<span class="teletype">[%i18n ...]</span> expressions into calls to the generated translation
+functions.
+</p><h2>Setup</h2><p>Add the PPX to your dune file:
+</p><pre>(preprocess (pps ocsigen-i18n -- --default-module MyI18n))
+</pre><p>where <span class="teletype">MyI18n</span> is the name of the module generated by
+<span class="teletype">ocsigen-i18n-generator</span> (the basename of the output file,
+capitalized).
+</p><p>Without dune, use:
+</p><pre>-ppx 'ocsigen-i18n-rewriter --default-module MyI18n'
+</pre><h2>Expressions</h2><p>The PPX supports the following forms:
+</p><table><tr><td><span class="teletype">[%i18n foo]</span></td><td>Calls <span class="teletype">MyI18n.Tr.foo ()</span> (HTML)</td></tr><tr><td><span class="teletype">[%i18n S.foo]</span></td><td>Calls <span class="teletype">MyI18n.S.foo ()</span> (string)</td></tr><tr><td><span class="teletype">[%i18n bar ~x:expr]</span></td><td>Passes a labelled argument</td></tr><tr><td><span class="teletype">[%i18n OtherMod.foo]</span></td><td>Calls <span class="teletype">OtherMod.Tr.foo ()</span></td></tr><tr><td><span class="teletype">[%i18n OtherMod.S.foo]</span></td><td>Calls <span class="teletype">OtherMod.S.foo ()</span></td></tr></table><h2>Module affixing</h2><p>To avoid redundancy when using multiple i18n modules, you can
+auto-prefix and auto-suffix module names:
+</p><pre>(preprocess (pps ocsigen-i18n -- --default-module MyI18n --prefix Pr_ --suffix _i18n))
+</pre><p>With this configuration, <span class="teletype">[%i18n Feature.foo]</span> becomes
+<span class="teletype">Pr_Feature_i18n.Tr.foo ()</span>.
+</p><p><strong>Important:</strong> Do not name your i18n file <span class="teletype">s.tsv</span>, as <span class="teletype">S</span> is
+reserved for the string module.</p></article></div></div></body></html>
