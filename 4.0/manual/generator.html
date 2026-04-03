@@ -57,7 +57,14 @@ translations as OCaml functions.
 </li><li> A module <span class="teletype">S</span> (inside <span class="teletype">Tr</span>) containing string translation functions
 </li></ul><p>All definitions use Eliom shared sections (<span class="teletype">let%shared</span>),
 making them available on both server and client.
-</p><h2>Using multiple TSV files</h2><p>Use <span class="teletype">--primary</span> to generate a secondary file that depends on
+</p><h2>Dune integration</h2><p>Use a dune rule to generate the Eliom file from your TSV file:
+</p><pre>(rule
+ (target example_i18n.eliom)
+ (deps example_i18n.tsv)
+ (action
+  (run %{bin:ocsigen-i18n-generator} --languages en,fr --input-file %{deps}
+    --output-file %{target})))
+</pre><h2>Using multiple TSV files</h2><p>Use <span class="teletype">--primary</span> to generate a secondary file that depends on
 a primary one. The secondary file will reuse the type and utility
 functions from the primary file:
 </p><pre>ocsigen-i18n-generator --languages en,fr \

@@ -79,6 +79,20 @@ let foo ?(lang = get_language ()) () () =
   | Fr -&gt; &quot;Ceci est une clé toute simple.&quot;
 ...
 end
+</pre><h2>Dune integration</h2><p>Use a dune rule to generate the OCaml file from your TSV file:
+</p><pre>(rule
+ (target example_i18n.ml)
+ (deps example_i18n.tsv)
+ (action
+  (run %{bin:ocsigen-i18n} --languages en,fr --input-file %{deps}
+    --output-file %{target})))
+</pre><p>For an Eliom application, use <span class="teletype">--eliom</span> to generate an <span class="teletype">.eliom</span> file:
+</p><pre>(rule
+ (target example_i18n.eliom)
+ (deps example_i18n.tsv)
+ (action
+  (run %{bin:ocsigen-i18n} --eliom --languages en,fr --input-file %{deps}
+    --output-file %{target})))
 </pre><h2>Using multiple TSV files</h2><p>Use <span class="teletype">--primary</span> to generate a secondary file that depends on
 a primary one:
 </p><pre>ocsigen-i18n --languages en,fr \
