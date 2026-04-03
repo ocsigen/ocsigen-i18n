@@ -31,6 +31,19 @@ The generator produces:
 All definitions use Eliom shared sections ({{{let%shared}}}),
 making them available on both server and client.
 
+==Dune integration
+
+Use a dune rule to generate the Eliom file from your TSV file:
+
+{{{
+(rule
+ (target example_i18n.eliom)
+ (deps example_i18n.tsv)
+ (action
+  (run %{bin:ocsigen-i18n-generator} --languages en,fr --input-file %{deps}
+    --output-file %{target})))
+}}}
+
 ==Using multiple TSV files
 
 Use {{{--primary}}} to generate a secondary file that depends on
