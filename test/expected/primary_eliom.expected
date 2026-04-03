@@ -1,0 +1,33 @@
+let%shared languages = [Example_i18n.En;Example_i18n.Fr]
+let%server _language_ = Example_i18n._language_
+let%server get_language () = Eliom_reference.Volatile.get _language_
+let%server set_language language = 
+Eliom_reference.Volatile.set _language_ language
+
+let%client _language_ = Example_i18n._language_
+let%client get_language () = !_language_
+let%client set_language language = _language_ := language
+
+let%shared txt = Eliom_content.Html.F.txt
+[%%shared
+module Tr = struct
+let welcome ?(lang = get_language ()) ()  () =
+match lang with
+| Example_i18n.En -> [txt "Welcome!"]
+| Example_i18n.Fr -> [txt "Bienvenue !"]
+let thanks ?(lang = get_language ()) () ~name () =
+match lang with
+| Example_i18n.En -> List.flatten [[txt "Thank you "];name;[txt "."]]
+| Example_i18n.Fr -> List.flatten [[txt "Merci "];name;[txt "."]]
+module S = struct
+let welcome ?(lang = get_language ()) ()  () =
+match lang with
+| Example_i18n.En -> "Welcome!"
+| Example_i18n.Fr -> "Bienvenue !"
+let thanks ?(lang = get_language ()) () ~name () =
+match lang with
+| Example_i18n.En -> String.concat "" ["Thank you ";name;"."]
+| Example_i18n.Fr -> String.concat "" ["Merci ";name;"."]
+end
+end
+]

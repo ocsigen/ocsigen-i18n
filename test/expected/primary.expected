@@ -1,0 +1,11 @@
+open Example_i18n 
+module Tr = struct
+let welcome ?(lang = Example_i18n.get_language ()) ()  () =
+match lang with
+| Example_i18n.En -> "Welcome!"
+| Example_i18n.Fr -> "Bienvenue !"
+let thanks ?(lang = Example_i18n.get_language ()) () ~name () =
+match lang with
+| Example_i18n.En -> String.concat "" ["Thank you ";name;"."]
+| Example_i18n.Fr -> String.concat "" ["Merci ";name;"."]
+end
