@@ -1,0 +1,56 @@
+(rule
+ (target example_i18n.ml)
+ (deps example.tsv)
+ (action
+  (run %{bin:ocsigen-i18n} --languages en,fr --input-file %{deps}
+    --output-file %{target})))
+
+(rule
+ (target example_i18n_tyxml.ml)
+ (deps example.tsv)
+ (action
+  (run %{bin:ocsigen-i18n} --tyxml --languages en,fr --input-file %{deps}
+    --output-file %{target})))
+
+; Test PPX with default mode (strings only)
+
+(executable
+ (name test_ppx)
+ (modules test_ppx example_i18n)
+ (preprocess
+  (pps ocsigen-i18n -- --default-module Example_i18n)))
+
+(rule
+ (target ppx_output.actual)
+ (deps test_ppx.exe)
+ (action
+  (with-stdout-to
+   %{target}
+   (run ./test_ppx.exe))))
+
+(rule
+ (alias runtest)
+ (action
+  (diff expected/ppx_output.expected ppx_output.actual)))
+
+; Test PPX with --tyxml mode (HTML + S. prefix)
+
+(executable
+ (name test_ppx_tyxml)
+ (modules test_ppx_tyxml example_i18n_tyxml)
+ (libraries tyxml)
+ (preprocess
+  (pps ocsigen-i18n -- --default-module Example_i18n_tyxml)))
+
+(rule
+ (target ppx_tyxml_output.actual)
+ (deps test_ppx_tyxml.exe)
+ (action
+  (with-stdout-to
+   %{target}
+   (run ./test_ppx_tyxml.exe))))
+
+(rule
+ (alias runtest)
+ (action
+  (diff expected/ppx_tyxml_output.expected ppx_tyxml_output.actual)))

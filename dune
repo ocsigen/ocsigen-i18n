@@ -1,35 +1,47 @@
-
 (library
-  (name ppx)
-  (public_name ocsigen-i18n)
-  (kind ppx_rewriter)
-  (modules i18n_ppx_rewriter)
-  (libraries ppxlib))
+ (name ppx)
+ (public_name ocsigen-i18n)
+ (kind ppx_rewriter)
+ (modules i18n_ppx_rewriter)
+ (libraries ppxlib))
 
 (executable
-  (name i18n_rewriter)
-  (public_name ocsigen-i18n-rewriter)
-  (package ocsigen-i18n)
-  (libraries ppx)
-  (modules i18n_rewriter))
+ (name i18n_rewriter)
+ (public_name ocsigen-i18n-rewriter)
+ (package ocsigen-i18n)
+ (libraries ppx)
+ (modules i18n_rewriter))
 
 (executable
-  (name i18n_generate)
-  (public_name ocsigen-i18n-generator)
-  (package ocsigen-i18n)
-  (modules i18n_generate)
-  (libraries str))
+ (name i18n_generate)
+ (public_name ocsigen-i18n)
+ (package ocsigen-i18n)
+ (modules i18n_generate)
+ (libraries str))
 
 (executable
-  (name i18n_ppx_checker)
-  (public_name ocsigen-i18n-checker)
-  (package ocsigen-i18n)
-  (modules i18n_ppx_checker)
-  (libraries str ppxlib))
+ (name i18n_ppx_checker)
+ (public_name ocsigen-i18n-checker)
+ (package ocsigen-i18n)
+ (modules i18n_ppx_checker)
+ (libraries str ppxlib))
+
+(install
+ (section bin)
+ (files bin/ocsigen-i18n-generator))
+
+(rule
+ (alias runtest)
+ (deps
+  test/run_tests.sh
+  test/example.tsv
+  (glob_files test/expected/*.expected))
+ (action
+  (run test/run_tests.sh %{bin:ocsigen-i18n})))
 
 (ocamllex i18n_generate)
 
 (env
  (_
-  (flags (:standard -w @A-4-27-70))
-))
+  (flags
+   (:standard -w @A-4-27-70))))

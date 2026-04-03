@@ -1,0 +1,75 @@
+open Tyxml.Html
+type t = En|Fr
+exception Unknown_language of string
+let string_of_language = function 
+| En -> "en"| Fr -> "fr"
+let language_of_string = function
+| "en" -> En| "fr" -> Fr| s -> raise (Unknown_language s)
+let guess_language_of_string s = 
+try language_of_string s 
+with Unknown_language _ as e -> 
+try language_of_string (String.sub s 0 (String.index s '-')) 
+with Not_found -> 
+raise e 
+let languages = [En;Fr]
+let default_language = En
+(* We use a reference to store the language by default.
+Customize these functions if needed.
+For example use a scoped reference if you are using Eliom
+and want the language to depend on a session/tab or session group. *)
+let _language_ = ref default_language
+let get_language () = !_language_
+let set_language language = _language_ := language
+
+module Tr = struct
+let foo ?(lang = get_language ()) ()  () =
+match lang with
+| En -> [txt "This is a simple key."]
+| Fr -> [txt "Ceci est une cl\195\169 toute simple."]
+let a_human ?(lang = get_language ()) ()  () =
+match lang with
+| En -> [txt "a human"]
+| Fr -> [txt "un humain"]
+let bar ?(lang = get_language ()) () ~x () =
+match lang with
+| En -> List.flatten [[txt "I am "];x;[txt "."]]
+| Fr -> List.flatten [[txt "Je suis "];x;[txt "."]]
+let baz ?(lang = get_language ()) () ?(c=false) () =
+match lang with
+| En -> List.flatten [[txt "There "];[txt (if c then "are" else "is an")];[txt " apple"];[txt (if c then "s" else "")];[txt " here!"]]
+| Fr -> List.flatten [[txt "Il y a "];[txt (if c then "des" else "une")];[txt " pomme"];[txt (if c then "s" else "")];[txt " ici !"]]
+let bu ?(lang = get_language ()) () ~n ~x () =
+match lang with
+| En -> List.flatten [[txt "I am "];[txt (Printf.sprintf "%s" x)];[txt " ("];[txt (Printf.sprintf "%d" n)];[txt ")."]]
+| Fr -> List.flatten [[txt "Je suis "];[txt (Printf.sprintf "%s" x)];[txt " ("];[txt (Printf.sprintf "%d" n)];[txt ")."]]
+let someone_important ?(lang = get_language ()) ()  () =
+match lang with
+| En -> [txt "someone important"]
+| Fr -> [txt "quelqu'un d'important"]
+module S = struct
+let foo ?(lang = get_language ()) ()  () =
+match lang with
+| En -> "This is a simple key."
+| Fr -> "Ceci est une cl\195\169 toute simple."
+let a_human ?(lang = get_language ()) ()  () =
+match lang with
+| En -> "a human"
+| Fr -> "un humain"
+let bar ?(lang = get_language ()) () ~x () =
+match lang with
+| En -> String.concat "" ["I am ";x;"."]
+| Fr -> String.concat "" ["Je suis ";x;"."]
+let baz ?(lang = get_language ()) () ?(c=false) () =
+match lang with
+| En -> String.concat "" ["There ";(if c then "are" else "is an");" apple";(if c then "s" else "");" here!"]
+| Fr -> String.concat "" ["Il y a ";(if c then "des" else "une");" pomme";(if c then "s" else "");" ici !"]
+let bu ?(lang = get_language ()) () ~n ~x () =
+match lang with
+| En -> String.concat "" ["I am ";(Printf.sprintf "%s" x);" (";(Printf.sprintf "%d" n);")."]
+| Fr -> String.concat "" ["Je suis ";(Printf.sprintf "%s" x);" (";(Printf.sprintf "%d" n);")."]
+let someone_important ?(lang = get_language ()) ()  () =
+match lang with
+| En -> "someone important"
+| Fr -> "quelqu'un d'important"
+end
+end
