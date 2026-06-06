@@ -1,0 +1,127 @@
+{0 Code generator}
+
+The [ocsigen-i18n] command reads a TSV file and produces an OCaml
+source file containing the translations as OCaml functions.
+
+{1 Usage}
+
+{v
+ocsigen-i18n [options] [< input] [> output]
+v}
+
+{1 Options}
+
+{t
+  | Option | Description |
+  |--------|-------------|
+  | [--languages] | Comma-separated languages (e.g. [en,fr]). Must be ordered as in the TSV file. |
+  | [--default-language] | Set the default language (defaults to the first one in [--languages]). |
+  | [--input-file] | TSV file. If omitted or set to [-], reads from stdin. |
+  | [--output-file] | Output file. If omitted or set to [-], writes to stdout. |
+  | [--external-type] | Language values come from a predefined type (do not generate the type). |
+  | [--primary] | Generated file is secondary and depends on the given primary file. |
+  | [--eliom] | Generate code for a client-server Eliom app (implies [--tyxml]). |
+  | [--tyxml] | Generate code for a Tyxml-based app. |
+  | [--header] | Generate only the file header (types and utility functions, without translations). |
+}
+
+{1 Generation modes}
+
+{2 Default mode (no flags)}
+
+Generates plain OCaml code:
+- A type [t] with one constructor per language
+- Functions [string_of_language], [language_of_string], and [guess_language_of_string]
+- A list [languages] of all variants
+- Language storage using a simple [ref] ([get_language], [set_language])
+- A module [Tr] containing string translation functions
+
+{2 [--tyxml] mode}
+
+Like the default mode, but additionally:
+- Opens [Tyxml.Html]
+- The [Tr] module generates HTML elements (using [txt])
+- A [Tr.S] submodule provides string variants
+
+{2 [--eliom] mode}
+
+Generates Eliom client-server code:
+- Type and utility functions use [let%shared]
+- Language storage uses Eliom scoped references on the server
+  and a simple [ref] on the client
+- The type [t] has [[@@deriving json]] for client-server communication
+- Translation modules are wrapped in [[%%shared ...]]
+
+{1 Example output (default mode)}
+
+{v
+$ ocsigen-i18n --languages en,fr < example.tsv
+type t = En|Fr
+exception Unknown_language of string
+let string_of_language = function
+| En -> "en"| Fr -> "fr"
+let language_of_string = function
+| "en" -> En| "fr" -> Fr| s -> raise (Unknown_language s)
+...
+module Tr = struct
+let foo ?(lang = get_language ()) () () =
+  match lang with
+  | En -> "This is a simple key."
+  | Fr -> "Ceci est une clé toute simple."
+...
+end
+v}
+
+{1 Dune integration}
+
+Use a dune rule to generate the OCaml file from your TSV file:
+
+{v
+(rule
+ (target example_i18n.ml)
+ (deps example_i18n.tsv)
+ (action
+  (run %{bin:ocsigen-i18n} --languages en,fr --input-file %{deps}
+    --output-file %{target})))
+v}
+
+For an Eliom application, use [--eliom] to generate an [.eliom] file:
+
+{v
+(rule
+ (target example_i18n.eliom)
+ (deps example_i18n.tsv)
+ (action
+  (run %{bin:ocsigen-i18n} --eliom --languages en,fr --input-file %{deps}
+    --output-file %{target})))
+v}
+
+{1 Using multiple TSV files}
+
+Use [--primary] to generate a secondary file that depends on
+a primary one:
+
+{v
+ocsigen-i18n --languages en,fr \
+  --input-file main_i18n.tsv --output-file main_i18n.ml
+ocsigen-i18n --languages en,fr \
+  --primary main_i18n.ml \
+  --input-file extra_i18n.tsv --output-file extra_i18n.ml
+v}
+
+{1 Header-only generation}
+
+Use [--header] to generate only the type definitions and utility
+functions, without parsing a TSV file. This is useful when you want
+to define the type in one file and the translations in another:
+
+{v
+ocsigen-i18n --languages en,fr --header \
+  --output-file i18n_type.ml
+v}
+
+{1 Backward compatibility}
+
+The command [ocsigen-i18n-generator] is provided as an alias for
+[ocsigen-i18n --eliom]. Existing build systems using the old
+command name will continue to work.
