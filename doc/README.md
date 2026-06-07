@@ -1,0 +1,47 @@
+# How the Ocsigen-i18n documentation is generated
+
+The Ocsigen-i18n documentation published at <https://ocsigen.org/ocsigen-i18n/>
+is built with **odoc** and themed with the Ocsigen site chrome by
+[**wodoc**](https://github.com/ocsigen/wodoc) (an odoc driver). The same odoc
+sources are also what ocaml.org renders.
+
+## Sources
+
+| What | Where | Format |
+|---|---|---|
+| Manual | [`doc/*.mld`](.) (intro, generator, ppx, templates) + `doc/index.mld` | odoc pages |
+| API | the `.mli` of `ocsigen-i18n` (the `Ppx` module) | odoc comments |
+| Site configuration (nav, …) | [`doc/wodoc`](wodoc) | wodoc config (S-expression) |
+
+ocsigen-i18n has **no client/server split**, so a single `dune build @doc`
+(plain odoc) builds the manual and the API together — no odoc-driver. The left
+navigation and page theming are declared in [`doc/wodoc`](wodoc) and produced by
+`wodoc build`.
+
+## Build
+
+```
+wodoc build --config doc/wodoc --label dev --out _doc-site/dev \
+  --menu https://ocsigen.org/wodoc/menu.html
+```
+
+`wodoc build` runs `dune build @doc`, assembles every page into the Ocsigen site
+(shared header/menu/drawer, the version `<select>`, the left navigation from
+`doc/wodoc`) and writes the version redirect. `--menu` is fetched from its single
+canonical copy in `ocsigen.github.io`. Add `--local` to also fetch the shared
+`/css//img/` assets and preview offline.
+
+## Deployment (CI)
+
+[`.github/workflows/doc.yml`](../.github/workflows/doc.yml) builds and publishes
+to the project's **`gh-pages`** branch (served at `ocsigen.org/ocsigen-i18n/`).
+The CI triggers **only on `master`** (and manual dispatch), so pushing a branch
+never deploys:
+
+- **push to `master`** → rebuilds and deploys the **`dev`** docs.
+- **manual run** (Actions → *Documentation* → *Run workflow*) → builds any version
+  and optionally makes it `latest` (e.g. *label* = `5.0`, *ref* = `latest-mli-odoc`,
+  *set_latest*). The version-independent doc sources are overlaid from `master`.
+
+Each run replaces only its own `<label>/` directory; the other version
+directories already on `gh-pages` are preserved.
