@@ -7,6 +7,7 @@
 (project ocsigen-i18n)
 (title i18n)
 (pub /ocsigen-i18n)
+(manual-root)
 (landing ocsigen-i18n/index.html)
 (nav
   (section "Ocsigen-i18n"
