@@ -3,11 +3,11 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-  <title>Introduction — i18n</title>
+  <title>Module Ppx.I18n_ppx_rewriter — i18n</title>
   <link rel="stylesheet" href="/css/style.css"/>
   <link rel="stylesheet" href="/css/ocsigen-odoc.css"/>
-  <script src="../highlight.pack.js"></script>
-  <script src="../wodoc-highlight.js"></script>
+  <script src="../../highlight.pack.js"></script>
+  <script src="../../wodoc-highlight.js"></script>
 </head>
 <body class="wodoc-page wodoc-doc">
   <!-- Shared site menu — THE single source of truth for the header, top menu and
@@ -88,21 +88,21 @@
 </div>
 <div class="page-toc">
   <h3>On this page</h3>
-  <nav class="odoc-toc odoc-local-toc"><ul><li><a href="#installation">Installation</a></li><li><a href="#quick-start">Quick start</a></li></ul></nav>
+  
 </div>
 <nav class="api-nav manual-nav">
 <h3>Ocsigen-i18n</h3>
 <ul class="api-section">
-<li class="ml3" data-wodoc-page="intro"><a href="../ocsigen-i18n/intro.html">Introduction</a></li>
-<li class="ml3" data-wodoc-page="generator"><a href="../ocsigen-i18n/generator.html">Code generator</a></li>
-<li class="ml3" data-wodoc-page="ppx"><a href="../ocsigen-i18n/ppx.html">PPX rewriter</a></li>
-<li class="ml3" data-wodoc-page="templates"><a href="../ocsigen-i18n/templates.html">Template syntax</a></li>
+<li class="ml3" data-wodoc-page="intro"><a href="../../intro.html">Introduction</a></li>
+<li class="ml3" data-wodoc-page="generator"><a href="../../generator.html">Code generator</a></li>
+<li class="ml3" data-wodoc-page="ppx"><a href="../../ppx.html">PPX rewriter</a></li>
+<li class="ml3" data-wodoc-page="templates"><a href="../../templates.html">Template syntax</a></li>
 </ul>
 </nav>
 <nav class="api-nav">
 <h3>API</h3>
 <ul class="api-section">
-<li class="ml2" data-wodoc-page="Ppx"><a href="../ocsigen-i18n/Ppx/index.html">Ppx</a></li>
+<li class="ml2 current" data-wodoc-page="Ppx"><a href="../../Ppx/index.html">Ppx</a></li>
 </ul>
 </nav>
 </nav>
@@ -123,34 +123,41 @@
 </div>
 <div class="page-toc">
   <h3>On this page</h3>
-  <nav class="odoc-toc odoc-local-toc"><ul><li><a href="#installation">Installation</a></li><li><a href="#quick-start">Quick start</a></li></ul></nav>
+  
 </div>
 <nav class="api-nav manual-nav">
 <h3>Ocsigen-i18n</h3>
 <ul class="api-section">
-<li class="ml3" data-wodoc-page="intro"><a href="../ocsigen-i18n/intro.html">Introduction</a></li>
-<li class="ml3" data-wodoc-page="generator"><a href="../ocsigen-i18n/generator.html">Code generator</a></li>
-<li class="ml3" data-wodoc-page="ppx"><a href="../ocsigen-i18n/ppx.html">PPX rewriter</a></li>
-<li class="ml3" data-wodoc-page="templates"><a href="../ocsigen-i18n/templates.html">Template syntax</a></li>
+<li class="ml3" data-wodoc-page="intro"><a href="../../intro.html">Introduction</a></li>
+<li class="ml3" data-wodoc-page="generator"><a href="../../generator.html">Code generator</a></li>
+<li class="ml3" data-wodoc-page="ppx"><a href="../../ppx.html">PPX rewriter</a></li>
+<li class="ml3" data-wodoc-page="templates"><a href="../../templates.html">Template syntax</a></li>
 </ul>
 </nav>
 <nav class="api-nav">
 <h3>API</h3>
 <ul class="api-section">
-<li class="ml2" data-wodoc-page="Ppx"><a href="../ocsigen-i18n/Ppx/index.html">Ppx</a></li>
+<li class="ml2 current" data-wodoc-page="Ppx"><a href="../../Ppx/index.html">Ppx</a></li>
 </ul>
 </nav>
 
       </nav>
       <article class="rightcol">
-        <header class="odoc-preamble"><h1 id="introduction">Introduction</h1><p>Ocsigen-i18n provides internationalisation (i18n) support for OCaml applications.</p><p>Translations are described in TSV (tab-separated values) files. A code generator produces an OCaml source file with the translations, and a PPX extension provides a convenient syntax to use them in your program.</p><p>Ocsigen-i18n supports three modes:</p><ul><li><b>Plain OCaml</b>: generates simple string functions (default)</li><li><b>Tyxml</b>: generates HTML elements using <a href="https://github.com/ocsigen/tyxml">Tyxml</a> (<code>--tyxml</code>)</li><li><b>Eliom</b>: generates client-server code for <a href="/eliom/">Eliom</a> apps (<code>--eliom</code>)</li></ul></header>
-        <div class="odoc-content"><h2 id="installation">Installation</h2><pre>opam install ocsigen-i18n</pre><p>The package provides three executables:</p><ul><li><b>ocsigen-i18n</b>: generates an OCaml (or Eliom) file from a TSV file</li><li><b>ocsigen-i18n-rewriter</b>: PPX extension for the <code>[%i18n ...]</code> syntax</li><li><b>ocsigen-i18n-checker</b>: PPX checker for i18n expressions</li></ul><p>For backward compatibility, <b>ocsigen-i18n-generator</b> is provided as an alias for <code>ocsigen-i18n --eliom</code>.</p><h2 id="quick-start">Quick start</h2><p>Create a TSV file (e.g. <code>example_i18n.tsv</code>) with your translations:</p><pre>hello	Hello!	Bonjour !
-greeting	Hello {{name}}.	Bonjour {{name}}.</pre><p>Generate the OCaml file:</p><pre>ocsigen-i18n --languages en,fr \
-  --input-file example_i18n.tsv \
-  --output-file example_i18n.ml</pre><p>For an Eliom application:</p><pre>ocsigen-i18n --eliom --languages en,fr \
-  --input-file example_i18n.tsv \
-  --output-file example_i18n.eliom</pre><p>Use the PPX in your code:</p><pre>[%i18n hello]
-[%i18n greeting ~name:&quot;World&quot;]</pre><p>With Tyxml or Eliom, variables are HTML elements:</p><pre>[%i18n greeting ~name:[txt &quot;World&quot;]]</pre><p>Add the PPX to your dune file:</p><pre>(preprocess (pps ocsigen-i18n -- --default-module Example_i18n))</pre></div>
+        <header class="odoc-preamble"><h1>Module <code><span>Ppx.I18n_ppx_rewriter</span></code></h1></header>
+        <div class="odoc-content"><div class="odoc-spec"><div class="spec value anchored" id="val-default_module_name"><code><span><span class="keyword">val</span> default_module_name : <span>string <span class="xref-unresolved">Stdlib</span>.ref</span></span></code></div></div><div class="odoc-spec"><div class="spec value anchored" id="val-module_prefix"><code><span><span class="keyword">val</span> module_prefix : <span>string <span class="xref-unresolved">Stdlib</span>.ref</span></span></code></div></div><div class="odoc-spec"><div class="spec value anchored" id="val-module_suffix"><code><span><span class="keyword">val</span> module_suffix : <span>string <span class="xref-unresolved">Stdlib</span>.ref</span></span></code></div></div><div class="odoc-spec"><div class="spec value anchored" id="val-mk_ident"><code><span><span class="keyword">val</span> mk_ident : <span><span class="xref-unresolved">Ppxlib</span>.longident <span class="arrow">&#45;&gt;</span></span> <span class="xref-unresolved">Ppxlib</span>.longident</span></code></div></div><div class="odoc-spec"><div class="spec value anchored" id="val-unit"><code><span><span class="keyword">val</span> unit : <span><span class="xref-unresolved">Ppxlib__</span>.Location.t <span class="arrow">&#45;&gt;</span></span> <span class="xref-unresolved">Ppxlib</span>.arg_label * <span class="xref-unresolved">Ppxlib__</span>.Import.expression</span></code></div></div><div class="odoc-spec"><div class="spec value anchored" id="val-lang_args"><code><span><span class="keyword">val</span> lang_args : 
+  <span><span><span>(<span class="xref-unresolved">Ppxlib</span>.arg_label * <span class="type-var">'a</span>)</span> list</span> <span class="arrow">&#45;&gt;</span></span>
+  <span><span>(<span class="xref-unresolved">Ppxlib</span>.arg_label * <span class="type-var">'a</span>)</span> list</span> * <span><span>(<span class="xref-unresolved">Ppxlib</span>.arg_label * <span class="type-var">'a</span>)</span> list</span></span></code></div></div><div class="odoc-spec"><div class="spec value anchored" id="val-ident"><code><span><span class="keyword">val</span> ident : 
+  <span><span class="xref-unresolved">Ppxlib__</span>.Location.t <span class="arrow">&#45;&gt;</span></span>
+  <span><span class="xref-unresolved">Ppxlib</span>.longident <span class="arrow">&#45;&gt;</span></span>
+  <span class="xref-unresolved">Ppxlib__</span>.Import.expression</span></code></div></div><div class="odoc-spec"><div class="spec value anchored" id="val-apply"><code><span><span class="keyword">val</span> apply : 
+  <span><span class="xref-unresolved">Ppxlib__</span>.Location.t <span class="arrow">&#45;&gt;</span></span>
+  <span><span class="xref-unresolved">Ppxlib</span>.longident <span class="arrow">&#45;&gt;</span></span>
+  <span><span><span>(<span class="xref-unresolved">Ppxlib__</span>.Import.arg_label * <span class="xref-unresolved">Ppxlib__</span>.Import.expression)</span> list</span> <span class="arrow">&#45;&gt;</span></span>
+  <span class="xref-unresolved">Ppxlib__</span>.Import.expression</span></code></div></div><div class="odoc-spec"><div class="spec value anchored" id="val-expand"><code><span><span class="keyword">val</span> expand : 
+  <span><span class="label">loc</span>:<span class="xref-unresolved">Ppxlib__</span>.Location.t <span class="arrow">&#45;&gt;</span></span>
+  <span><span class="label">path</span>:<span class="type-var">'a</span> <span class="arrow">&#45;&gt;</span></span>
+  <span><span class="xref-unresolved">Ppxlib__</span>.Import.expression <span class="arrow">&#45;&gt;</span></span>
+  <span class="xref-unresolved">Ppxlib__</span>.Import.expression</span></code></div></div><div class="odoc-spec"><div class="spec value anchored" id="val-extension"><code><span><span class="keyword">val</span> extension : <span class="xref-unresolved">Ppxlib</span>.Extension.t</span></code></div></div><div class="odoc-spec"><div class="spec value anchored" id="val-rule"><code><span><span class="keyword">val</span> rule : <span class="xref-unresolved">Ppxlib</span>.Context_free.Rule.t</span></code></div></div></div>
       </article>
     </div>
   </div>
