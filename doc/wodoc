@@ -1,0 +1,18 @@
+;; Declarative wodoc config for the Ocsigen-i18n documentation.
+;;   wodoc build --config doc/wodoc --out <dir>/<label> --label <v> \
+;;               --menu https://ocsigen.org/doc/menu.html [--local]
+;; (wodoc build runs `dune build @doc` itself when --src is omitted.)
+;; ocsigen-i18n has no client/server split, so plain `dune build @doc` is enough
+;; (no odoc-driver). The manual (doc/*.mld) and the API live under ocsigen-i18n/.
+(project ocsigen-i18n)
+(title i18n)
+(pub /ocsigen-i18n)
+(landing ocsigen-i18n/index.html)
+(nav
+  (section "Ocsigen-i18n"
+    (link "Introduction"    ocsigen-i18n/intro.html     intro)
+    (link "Code generator"  ocsigen-i18n/generator.html generator)
+    (link "PPX rewriter"    ocsigen-i18n/ppx.html       ppx)
+    (link "Template syntax" ocsigen-i18n/templates.html templates))
+  (api-section "API"
+    (link "Ppx" ocsigen-i18n/Ppx/index.html Ppx)))

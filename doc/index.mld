@@ -1,0 +1,17 @@
+{0 Ocsigen-i18n}
+
+Ocsigen-i18n provides internationalisation (i18n) support for OCaml
+applications. Translations are described in TSV (tab-separated values)
+files; a code generator turns them into OCaml functions and a PPX
+extension provides a convenient [[%i18n ...]] syntax to use them.
+
+{1 Manual}
+
+- {{!page-intro}Introduction} — overview, installation and quick start
+- {{!page-generator}Code generator} — the [ocsigen-i18n] command and its options
+- {{!page-ppx}PPX rewriter} — the [[%i18n ...]] syntax
+- {{!page-templates}Template syntax} — how to write the TSV translation files
+
+{1 API}
+
+- {!module-Ppx} — the PPX rewriter library
