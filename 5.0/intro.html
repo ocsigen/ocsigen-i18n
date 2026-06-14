@@ -93,16 +93,16 @@
 <nav class="api-nav manual-nav">
 <h3>Ocsigen-i18n</h3>
 <ul class="api-section">
-<li class="ml3 current" data-wodoc-page="intro"><a href="./intro.html">Introduction</a></li>
-<li class="ml3" data-wodoc-page="generator"><a href="./generator.html">Code generator</a></li>
-<li class="ml3" data-wodoc-page="ppx"><a href="./ppx.html">PPX rewriter</a></li>
-<li class="ml3" data-wodoc-page="templates"><a href="./templates.html">Template syntax</a></li>
+<li class="ml3 current" data-wodoc-page="intro.html"><a href="./intro.html">Introduction</a></li>
+<li class="ml3" data-wodoc-page="generator.html"><a href="./generator.html">Code generator</a></li>
+<li class="ml3" data-wodoc-page="ppx.html"><a href="./ppx.html">PPX rewriter</a></li>
+<li class="ml3" data-wodoc-page="templates.html"><a href="./templates.html">Template syntax</a></li>
 </ul>
 </nav>
 <nav class="api-nav">
 <h3>API</h3>
 <ul class="api-section">
-<li class="ml2" data-wodoc-page="Ppx"><a href="./Ppx/index.html">Ppx</a></li>
+<li class="ml2" data-wodoc-page="Ppx/index.html"><a href="./Ppx/index.html">Ppx</a></li>
 </ul>
 </nav>
 </nav>
@@ -128,22 +128,22 @@
 <nav class="api-nav manual-nav">
 <h3>Ocsigen-i18n</h3>
 <ul class="api-section">
-<li class="ml3 current" data-wodoc-page="intro"><a href="./intro.html">Introduction</a></li>
-<li class="ml3" data-wodoc-page="generator"><a href="./generator.html">Code generator</a></li>
-<li class="ml3" data-wodoc-page="ppx"><a href="./ppx.html">PPX rewriter</a></li>
-<li class="ml3" data-wodoc-page="templates"><a href="./templates.html">Template syntax</a></li>
+<li class="ml3 current" data-wodoc-page="intro.html"><a href="./intro.html">Introduction</a></li>
+<li class="ml3" data-wodoc-page="generator.html"><a href="./generator.html">Code generator</a></li>
+<li class="ml3" data-wodoc-page="ppx.html"><a href="./ppx.html">PPX rewriter</a></li>
+<li class="ml3" data-wodoc-page="templates.html"><a href="./templates.html">Template syntax</a></li>
 </ul>
 </nav>
 <nav class="api-nav">
 <h3>API</h3>
 <ul class="api-section">
-<li class="ml2" data-wodoc-page="Ppx"><a href="./Ppx/index.html">Ppx</a></li>
+<li class="ml2" data-wodoc-page="Ppx/index.html"><a href="./Ppx/index.html">Ppx</a></li>
 </ul>
 </nav>
 
       </nav>
       <article class="rightcol">
-        <header class="odoc-preamble"><h1 id="introduction">Introduction</h1><p>Ocsigen-i18n provides internationalisation (i18n) support for OCaml applications.</p><p>Translations are described in TSV (tab-separated values) files. A code generator produces an OCaml source file with the translations, and a PPX extension provides a convenient syntax to use them in your program.</p><p>Ocsigen-i18n supports three modes:</p><ul><li><b>Plain OCaml</b>: generates simple string functions (default)</li><li><b>Tyxml</b>: generates HTML elements using <a href="https://github.com/ocsigen/tyxml">Tyxml</a> (<code>--tyxml</code>)</li><li><b>Eliom</b>: generates client-server code for <a href="/eliom/">Eliom</a> apps (<code>--eliom</code>)</li></ul></header>
+        <header class="odoc-preamble"><h1 id="introduction">Introduction</h1><p>Ocsigen-i18n provides internationalisation (i18n) support for OCaml applications.</p><p>Translations are described in TSV (tab-separated values) files. A code generator produces an OCaml source file with the translations, and a PPX extension provides a convenient syntax to use them in your program.</p><p>Ocsigen-i18n supports three modes:</p><ul><li><b>Plain OCaml</b>: generates simple string functions (default)</li><li><b>Tyxml</b>: generates HTML elements using <a href="https://github.com/ocsigen/tyxml">Tyxml</a> (<code>--tyxml</code>)</li><li><b>Eliom</b>: generates client-server code for <a href="https://ocsigen.org/eliom/">Eliom</a> apps (<code>--eliom</code>)</li></ul></header>
         <div class="odoc-content"><h2 id="installation">Installation</h2><pre>opam install ocsigen-i18n</pre><p>The package provides three executables:</p><ul><li><b>ocsigen-i18n</b>: generates an OCaml (or Eliom) file from a TSV file</li><li><b>ocsigen-i18n-rewriter</b>: PPX extension for the <code>[%i18n ...]</code> syntax</li><li><b>ocsigen-i18n-checker</b>: PPX checker for i18n expressions</li></ul><p>For backward compatibility, <b>ocsigen-i18n-generator</b> is provided as an alias for <code>ocsigen-i18n --eliom</code>.</p><h2 id="quick-start">Quick start</h2><p>Create a TSV file (e.g. <code>example_i18n.tsv</code>) with your translations:</p><pre>hello	Hello!	Bonjour !
 greeting	Hello {{name}}.	Bonjour {{name}}.</pre><p>Generate the OCaml file:</p><pre>ocsigen-i18n --languages en,fr \
   --input-file example_i18n.tsv \
