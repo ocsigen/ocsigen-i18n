@@ -11,7 +11,7 @@ your program.
 Ocsigen-i18n supports three modes:
 - {b Plain OCaml}: generates simple string functions (default)
 - {b Tyxml}: generates HTML elements using {{:https://github.com/ocsigen/tyxml}Tyxml} ([--tyxml])
-- {b Eliom}: generates client-server code for {{:/eliom/}Eliom} apps ([--eliom])
+- {b Eliom}: generates client-server code for {{:https://ocsigen.org/eliom/}Eliom} apps ([--eliom])
 
 {1 Installation}
 
