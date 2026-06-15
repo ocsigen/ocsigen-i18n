@@ -1,0 +1,354 @@
+# i18n
+
+> - [ocsigen-i18n](ocsigen-i18n/index.md) (version 5.0.0)
+
+
+---
+
+# Introduction
+
+Ocsigen-i18n provides internationalisation (i18n) support for OCaml applications.
+
+Translations are described in TSV (tab-separated values) files. A code generator produces an OCaml source file with the translations, and a PPX extension provides a convenient syntax to use them in your program.
+
+Ocsigen-i18n supports three modes:
+
+- **Plain OCaml**: generates simple string functions (default)
+- **Tyxml**: generates HTML elements using [Tyxml](https://github.com/ocsigen/tyxml) (`--tyxml`)
+- **Eliom**: generates client-server code for [Eliom](https://ocsigen.org/eliom/) apps (`--eliom`)
+
+## Installation
+
+```
+opam install ocsigen-i18n
+```
+The package provides three executables:
+
+- **ocsigen-i18n**: generates an OCaml (or Eliom) file from a TSV file
+- **ocsigen-i18n-rewriter**: PPX extension for the `[%i18n ...]` syntax
+- **ocsigen-i18n-checker**: PPX checker for i18n expressions
+For backward compatibility, **ocsigen-i18n-generator** is provided as an alias for `ocsigen-i18n --eliom`.
+
+
+## Quick start
+
+Create a TSV file (e.g. `example_i18n.tsv`) with your translations:
+
+```
+hello	Hello!	Bonjour !
+greeting	Hello {{name}}.	Bonjour {{name}}.
+```
+Generate the OCaml file:
+
+```
+ocsigen-i18n --languages en,fr \
+  --input-file example_i18n.tsv \
+  --output-file example_i18n.ml
+```
+For an Eliom application:
+
+```
+ocsigen-i18n --eliom --languages en,fr \
+  --input-file example_i18n.tsv \
+  --output-file example_i18n.eliom
+```
+Use the PPX in your code:
+
+```
+[%i18n hello]
+[%i18n greeting ~name:"World"]
+```
+With Tyxml or Eliom, variables are HTML elements:
+
+```
+[%i18n greeting ~name:[txt "World"]]
+```
+Add the PPX to your dune file:
+
+```
+(preprocess (pps ocsigen-i18n -- --default-module Example_i18n))
+```
+
+
+---
+
+# Code generator
+
+The `ocsigen-i18n` command reads a TSV file and produces an OCaml source file containing the translations as OCaml functions.
+
+
+## Usage
+
+```
+ocsigen-i18n [options] [< input] [> output]
+```
+
+## Options
+
+| Option | Description |
+| --- | --- |
+| `--languages` | Comma-separated languages (e.g. `en,fr`). Must be ordered as in the TSV file. |
+| `--default-language` | Set the default language (defaults to the first one in `--languages`). |
+| `--input-file` | TSV file. If omitted or set to `-`, reads from stdin. |
+| `--output-file` | Output file. If omitted or set to `-`, writes to stdout. |
+| `--external-type` | Language values come from a predefined type (do not generate the type). |
+| `--primary` | Generated file is secondary and depends on the given primary file. |
+| `--eliom` | Generate code for a client-server Eliom app (implies `--tyxml`). |
+| `--tyxml` | Generate code for a Tyxml-based app. |
+| `--header` | Generate only the file header (types and utility functions, without translations). |
+
+## Generation modes
+
+
+### Default mode (no flags)
+
+Generates plain OCaml code:
+
+- A type `t` with one constructor per language
+- Functions `string_of_language`, `language_of_string`, and `guess_language_of_string`
+- A list `languages` of all variants
+- Language storage using a simple `ref` (`get_language`, `set_language`)
+- A module `Tr` containing string translation functions
+
+### `--tyxml` mode
+
+Like the default mode, but additionally:
+
+- Opens `Tyxml.Html`
+- The `Tr` module generates HTML elements (using `txt`)
+- A `Tr.S` submodule provides string variants
+
+### `--eliom` mode
+
+Generates Eliom client-server code:
+
+- Type and utility functions use `let%shared`
+- Language storage uses Eliom scoped references on the server and a simple `ref` on the client
+- The type `t` has `[@@deriving json]` for client-server communication
+- Translation modules are wrapped in `[%%shared ...]`
+
+## Example output (default mode)
+
+```
+$ ocsigen-i18n --languages en,fr < example.tsv
+type t = En|Fr
+exception Unknown_language of string
+let string_of_language = function
+| En -> "en"| Fr -> "fr"
+let language_of_string = function
+| "en" -> En| "fr" -> Fr| s -> raise (Unknown_language s)
+...
+module Tr = struct
+let foo ?(lang = get_language ()) () () =
+  match lang with
+  | En -> "This is a simple key."
+  | Fr -> "Ceci est une clé toute simple."
+...
+end
+```
+
+## Dune integration
+
+Use a dune rule to generate the OCaml file from your TSV file:
+
+```
+(rule
+ (target example_i18n.ml)
+ (deps example_i18n.tsv)
+ (action
+  (run %{bin:ocsigen-i18n} --languages en,fr --input-file %{deps}
+    --output-file %{target})))
+```
+For an Eliom application, use `--eliom` to generate an `.eliom` file:
+
+```
+(rule
+ (target example_i18n.eliom)
+ (deps example_i18n.tsv)
+ (action
+  (run %{bin:ocsigen-i18n} --eliom --languages en,fr --input-file %{deps}
+    --output-file %{target})))
+```
+
+## Using multiple TSV files
+
+Use `--primary` to generate a secondary file that depends on a primary one:
+
+```
+ocsigen-i18n --languages en,fr \
+  --input-file main_i18n.tsv --output-file main_i18n.ml
+ocsigen-i18n --languages en,fr \
+  --primary main_i18n.ml \
+  --input-file extra_i18n.tsv --output-file extra_i18n.ml
+```
+
+## Header-only generation
+
+Use `--header` to generate only the type definitions and utility functions, without parsing a TSV file. This is useful when you want to define the type in one file and the translations in another:
+
+```
+ocsigen-i18n --languages en,fr --header \
+  --output-file i18n_type.ml
+```
+
+## Backward compatibility
+
+The command `ocsigen-i18n-generator` is provided as an alias for `ocsigen-i18n --eliom`. Existing build systems using the old command name will continue to work.
+
+
+---
+
+# PPX rewriter
+
+The `ocsigen-i18n-rewriter` PPX extension transforms `[%i18n ...]` expressions into calls to the generated translation functions.
+
+
+## Setup
+
+Add the PPX to your dune file:
+
+```
+(preprocess (pps ocsigen-i18n -- --default-module MyI18n))
+```
+where `MyI18n` is the name of the module generated by `ocsigen-i18n-generator` (the basename of the output file, capitalized).
+
+Without dune, use:
+
+```
+-ppx 'ocsigen-i18n-rewriter --default-module MyI18n'
+```
+
+## Expressions
+
+The PPX supports the following forms:
+
+| Expression | Meaning |
+| --- | --- |
+| `[%i18n foo]` | Calls `MyI18n.Tr.foo ()` (HTML) |
+| `[%i18n S.foo]` | Calls `MyI18n.S.foo ()` (string) |
+| `[%i18n bar ~x:expr]` | Passes a labelled argument |
+| `[%i18n OtherMod.foo]` | Calls `OtherMod.Tr.foo ()` |
+| `[%i18n OtherMod.S.foo]` | Calls `OtherMod.S.foo ()` |
+
+## Module affixing
+
+To avoid redundancy when using multiple i18n modules, you can auto-prefix and auto-suffix module names:
+
+```
+(preprocess (pps ocsigen-i18n -- --default-module MyI18n --prefix Pr_ --suffix _i18n))
+```
+With this configuration, `[%i18n Feature.foo]` becomes `Pr_Feature_i18n.Tr.foo ()`.
+
+**Important:** Do not name your i18n file `s.tsv`, as `S` is reserved for the string module.
+
+
+---
+
+# Template syntax
+
+Translations are defined in a TSV file. The first column is the key (used as the OCaml function name). The following columns are the translations for each language, in the order specified by the `--languages` option.
+
+
+## Simple strings
+
+```
+foo	This is a simple key.	Ceci est une clé toute simple.
+```
+
+## Variables
+
+`{{x}}` defines a labelled argument `~x`:
+
+```
+bar	I am {{x}}.	Je suis {{x}}.
+```
+
+## Typed variables
+
+`{{x %d}}` defines a labelled argument `~x` with a format specifier:
+
+```
+bu	I am {{x %s}} ({{n %d}}).	Je suis {{x %s}} ({{n %d}}).
+```
+
+## Conditional values
+
+`{{{c?if_true||if_false}}}` defines an optional boolean argument `?(c=false)`.
+
+```
+baz	There {{{c?are||is}}} apple{{{c?s||}}} here!	Il y a {{{c?des||une}}} pomme{{{c?s||}}} ici !
+```
+
+## Notes
+
+- Languages do not need to use the same variables. The compiler generates a function taking all parameters it detects across all languages.
+- A variable name used twice refers to the same argument.
+- The TSV file must end with a newline.
+
+
+---
+
+# OCaml Package Documentation
+
+- [ocsigen-i18n](ocsigen-i18n/index.md) (version 5.0.0)
+
+
+---
+
+# Module `Ppx`
+
+```ocaml
+module I18n_ppx_rewriter : sig ... end
+```
+
+
+---
+
+# Module `Ppx.I18n_ppx_rewriter`
+
+```ocaml
+val default_module_name : string Stdlib.ref
+```
+```ocaml
+val module_prefix : string Stdlib.ref
+```
+```ocaml
+val module_suffix : string Stdlib.ref
+```
+```ocaml
+val mk_ident : Ppxlib.longident -> Ppxlib.longident
+```
+```ocaml
+val unit : Ppxlib__.Location.t -> Ppxlib.arg_label * Ppxlib__.Import.expression
+```
+```ocaml
+val lang_args : 
+  (Ppxlib.arg_label * 'a) list ->
+  (Ppxlib.arg_label * 'a) list * (Ppxlib.arg_label * 'a) list
+```
+```ocaml
+val ident : 
+  Ppxlib__.Location.t ->
+  Ppxlib.longident ->
+  Ppxlib__.Import.expression
+```
+```ocaml
+val apply : 
+  Ppxlib__.Location.t ->
+  Ppxlib.longident ->
+  (Ppxlib__.Import.arg_label * Ppxlib__.Import.expression) list ->
+  Ppxlib__.Import.expression
+```
+```ocaml
+val expand : 
+  loc:Ppxlib__.Location.t ->
+  path:'a ->
+  Ppxlib__.Import.expression ->
+  Ppxlib__.Import.expression
+```
+```ocaml
+val extension : Ppxlib.Extension.t
+```
+```ocaml
+val rule : Ppxlib.Context_free.Rule.t
+```

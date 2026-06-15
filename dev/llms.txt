@@ -1,0 +1,14 @@
+# i18n
+
+> - [ocsigen-i18n](ocsigen-i18n/index.md) (version 5.0.0)
+
+## Manual
+- [Introduction](intro.md)
+- [Code generator](generator.md)
+- [PPX rewriter](ppx.md)
+- [Template syntax](templates.md)
+- [OCaml Package Documentation](index.md)
+
+## API
+- [Module `Ppx`](Ppx.md)
+- [Module `Ppx.I18n_ppx_rewriter`](Ppx-I18n_ppx_rewriter.md)
