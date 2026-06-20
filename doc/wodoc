@@ -18,3 +18,9 @@
     (link "Template syntax" ocsigen-i18n/templates.html templates))
   (api-section "API"
     (link "Ppx" ocsigen-i18n/Ppx/index.html Ppx)))
+
+;; Sibling Ocsigen projects this doc links to, so wodoc rewrites their
+;; ocaml.org cross-references to relative links into their deployed docs.
+;; (pkg deploy-dir layout wrapper-module)
+(hosted
+  (eliom eliom true Eliom))
