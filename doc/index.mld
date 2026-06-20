@@ -1,3 +1,5 @@
+@children_order intro generator ppx templates
+
 {0 Ocsigen-i18n}
 
 Ocsigen-i18n provides internationalisation (i18n) support for OCaml
