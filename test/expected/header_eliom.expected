@@ -12,14 +12,14 @@ with Not_found ->
 raise e 
 let%shared languages = [En;Fr]
 let%shared default_language = En
-let%server _language_ = Eliom_reference.Volatile.eref
-~scope:Eliom_common.default_process_scope default_language
-let%server get_language () = Eliom_reference.Volatile.get _language_
+let%server _language_ = Eliom.Reference.Volatile.eref
+~scope:Eliom.Common.default_process_scope default_language
+let%server get_language () = Eliom.Reference.Volatile.get _language_
 let%server set_language language = 
-Eliom_reference.Volatile.set _language_ language
+Eliom.Reference.Volatile.set _language_ language
 
 let%client _language_ = ref default_language
 let%client get_language () = !_language_
 let%client set_language language = _language_ := language
 
-let%shared txt = Eliom_content.Html.F.txt
+let%shared txt = Eliom.Content.Html.F.txt
