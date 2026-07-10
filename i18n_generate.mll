@@ -118,8 +118,8 @@ let print_type fmt ~variants =
 let print_generated_functions_eliom fmt ?primary_module ~default_language () =
   let server_language_reference =
     match primary_module with
-    | None -> "Eliom_reference.Volatile.eref\n\
-               ~scope:Eliom_common.default_process_scope default_language"
+    | None -> "Eliom.Reference.Volatile.eref\n\
+               ~scope:Eliom.Common.default_process_scope default_language"
     | Some module_name -> module_name ^ "._language_"
   and client_language_reference =
     match primary_module with
@@ -133,15 +133,15 @@ let print_generated_functions_eliom fmt ?primary_module ~default_language () =
   Format.pp_print_string fmt @@
   default_lang ^
   "let%server _language_ = " ^ server_language_reference ^ "\n\
-  let%server get_language () = Eliom_reference.Volatile.get _language_\n\
+  let%server get_language () = Eliom.Reference.Volatile.get _language_\n\
   let%server set_language language = \n\
-  Eliom_reference.Volatile.set _language_ language\n\
+  Eliom.Reference.Volatile.set _language_ language\n\
   \n\
   let%client _language_ = " ^ client_language_reference ^ "\n\
   let%client get_language () = !_language_\n\
   let%client set_language language = _language_ := language\n\
   \n\
-  let%shared txt = Eliom_content.Html.F.txt\n\
+  let%shared txt = Eliom.Content.Html.F.txt\n\
   "
 
 let print_generated_functions fmt ?primary_module ~default_language () =
