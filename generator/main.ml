@@ -1,3 +1,5 @@
+let ( let* ) = Result.bind
+
 let with_in_chan file f =
   match file with "-" -> f stdin | file -> In_channel.with_open_text file f
 
@@ -5,13 +7,15 @@ let with_out_chan file f =
   match file with "-" -> f stdout | file -> Out_channel.with_open_text file f
 
 let with_out_fmt file f =
-  with_out_chan file (fun out_chan ->
-      let fmt = Format.formatter_of_out_channel out_chan in
-      let r = f fmt in
-      Format.pp_print_flush fmt ();
-      (* Explicit flush to notice IO errors. *)
-      r
-  )
+  try
+    with_out_chan file (fun out_chan ->
+        let fmt = Format.formatter_of_out_channel out_chan in
+        let r = f fmt in
+        Format.pp_print_flush fmt ();
+        (* Explicit flush to notice IO errors. *)
+        Ok r
+    )
+  with Sys_error msg -> Error msg
 
 let parse_file ~variants input_file =
   with_in_chan input_file (fun in_chan ->
@@ -21,54 +25,6 @@ let parse_file ~variants input_file =
         failwith
           (Printf.sprintf "line: %d" lexbuf.Lexing.lex_curr_p.Lexing.pos_lnum)
   )
-
-let input_file = ref "-"
-let output_file = ref "-"
-let eliom_generation = ref false
-let tyxml_generation = ref false
-let header = ref false
-let languages = ref ""
-let default_language = ref ""
-let external_type = ref false
-let primary_file = ref ""
-
-let options =
-  Arg.align
-    [ ( "--languages"
-      , Arg.Set_string languages
-      , " Comma-separated languages (e.g. en,fr-fr, or Foo.Fr,Foo.Us if using \
-         external types). Must be ordered as in source TSV file." )
-    ; ( "--default-language"
-      , Arg.Set_string default_language
-      , " Set the default language (default is the first one in --languages)." )
-    ; ( "--input-file"
-      , Arg.Set_string input_file
-      , " TSV file containing keys and translations. If option is omited or \
-         set to -, read on stdin." )
-    ; ( "--output-file"
-      , Arg.Set_string output_file
-      , " File TSV file containing keys and translations. If option is omited \
-         or set to -, write on stdout." )
-    ; ( "--external-type"
-      , Arg.Set external_type
-      , " Values passed to --languages option come from a predefined type (do \
-         not generate the type nor from/to string functions)." )
-    ; ( "--primary"
-      , Arg.Set_string primary_file
-      , " Generated file is secondary and depends on given primary file." )
-    ; ( "--eliom"
-      , Arg.Set eliom_generation
-      , " Generate code for a client-server Eliom app (implies --tyxml)." )
-    ; ( "--tyxml"
-      , Arg.Set tyxml_generation
-      , " Generate code for a Tyxml-based app (for example a server-side Eliom \
-         app)." )
-    ; "--header", Arg.Set header, " Generate only the file header."
-    ]
-
-let usage = "usage: ocsigen-i18n [options] [< input] [> output]"
-let _ = Arg.parse options (fun s -> ()) usage
-let () = if !eliom_generation then tyxml_generation := true
 
 let normalize_type ?primary_module s =
   let constr =
@@ -80,37 +36,122 @@ let normalize_type ?primary_module s =
   | None -> constr
   | Some module_name -> module_name ^ "." ^ constr
 
-let _ =
-  let primary_module =
-    match !primary_file with
-    | "" -> None
-    | file ->
-        let base = Filename.remove_extension file in
-        Some (String.capitalize_ascii base)
+open! Cmdliner
+
+let languages =
+  let lang_conv =
+    let conv = Arg.(list string) in
+    let parser s =
+      match Arg.Conv.parser conv s with
+      | Ok [] -> Error "must define at least one language"
+      | r -> r
+    in
+    Arg.Conv.of_conv conv ~docv:"LANGS" ~parser
   in
-  let strings = Str.split (Str.regexp ",") !languages in
-  let variants =
-    if !primary_file = "" || not !external_type
-    then List.map (normalize_type ?primary_module) strings
-    else strings
+  let doc =
+    "Comma-separated languages (e.g. $(b,en,fr-fr), or $(b,Foo.Fr,Foo.Us) if \
+     using external types). Must be ordered as in source TSV file."
   in
-  let default_language =
-    match !default_language with
-    | "" -> List.hd variants
-    | x ->
-        let x = normalize_type ?primary_module x in
-        assert (List.mem x variants);
-        x
+  Arg.(required & opt (some lang_conv) None & info ["languages"] ~doc)
+
+let default_language =
+  let doc =
+    "Set the default language (default is the first one in $(b,--languages))."
   in
-  with_out_fmt !output_file (fun output ->
-      let tyxml = !tyxml_generation in
-      let eliom = !eliom_generation in
-      if !header
-      then
-        Gen.gen_header ~tyxml ~eliom ~variants ~strings ?primary_module
-          ~default_language output
-      else
-        let key_values = parse_file ~variants !input_file in
-        Gen.gen_module ~tyxml ~eliom ~variants ~strings ?primary_module
-          ~default_language ~external_type:!external_type ~key_values output
+  Arg.(
+    value & opt (some string) None & info ["default-language"] ~docv:"LANG" ~doc
   )
+
+let input_file =
+  let doc =
+    "TSV file containing keys and translations. If option is omitted or set to \
+     $(b,-), read on stdin."
+  in
+  Arg.(value & opt string "-" & info ["input-file"] ~docv:"FILE" ~doc)
+
+let output_file =
+  let doc =
+    "Path for the generated OCaml code. If option is omitted or set to $(b,-), \
+     write on stdout."
+  in
+  Arg.(value & opt string "-" & info ["output-file"] ~docv:"FILE" ~doc)
+
+let external_type =
+  let doc =
+    "Values passed to $(b,--languages) option come from a predefined type (do \
+     not generate the type nor from/to string functions)."
+  in
+  Arg.(value & flag & info ["external-type"] ~doc)
+
+let primary_module =
+  let module_conv =
+    let parser file =
+      Ok (String.capitalize_ascii (Filename.remove_extension file))
+    in
+    Arg.Conv.of_conv Arg.string ~docv:"FILE" ~parser
+  in
+  let doc = "Generated file is secondary and depends on given primary file." in
+  Arg.(value & opt (some module_conv) None & info ["primary"] ~doc)
+
+let eliom =
+  let doc =
+    "Generate code for a client-server Eliom app (implies $(b,--tyxml))."
+  in
+  Arg.(value & flag & info ["eliom"] ~doc)
+
+let tyxml =
+  let doc =
+    "Generate code for a Tyxml-based app (for example a server-side Eliom app)."
+  in
+  Arg.(value & flag & info ["tyxml"] ~doc)
+
+let header =
+  let doc = "Generate only the file header." in
+  Arg.(value & flag & info ["header"] ~doc)
+
+let term =
+  let open Term.Syntax in
+  let+ languages
+  and+ default_language
+  and+ input_file
+  and+ output_file
+  and+ external_type
+  and+ primary_module
+  and+ eliom
+  and+ tyxml
+  and+ header in
+  let tyxml = tyxml || eliom in
+  let variants =
+    match primary_module with
+    | Some _ when external_type -> languages
+    | Some _ | None -> List.map (normalize_type ?primary_module) languages
+  in
+  let* default_language =
+    match default_language with
+    | None -> Ok (List.hd variants)
+    | Some lang ->
+        let constr = normalize_type ?primary_module lang in
+        if List.mem constr variants
+        then Ok constr
+        else
+          Error
+            (Printf.sprintf "Default language %S is not in --languages." lang)
+  in
+  with_out_fmt output_file (fun output ->
+      if header
+      then
+        Gen.gen_header ~tyxml ~eliom ~variants ~strings:languages
+          ?primary_module ~default_language output
+      else
+        let key_values = parse_file ~variants input_file in
+        Gen.gen_module ~tyxml ~eliom ~variants ~strings:languages
+          ?primary_module ~default_language ~external_type ~key_values output
+  )
+
+let cmd =
+  let doc =
+    "Generate OCaml code for the translations described in a TSV file."
+  in
+  Cmd.v (Cmd.info "ocsigen-i18n" ~doc) term
+
+let () = exit (Cmd.eval_result ~catch:false cmd)

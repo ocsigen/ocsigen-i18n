@@ -2,6 +2,6 @@
  (name main)
  (public_name ocsigen-i18n)
  (package ocsigen-i18n)
- (libraries str))
+ (libraries str cmdliner))
 
 (ocamllex parser)
