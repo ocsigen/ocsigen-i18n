@@ -1,0 +1,7 @@
+(executable
+ (name main)
+ (public_name ocsigen-i18n)
+ (package ocsigen-i18n)
+ (libraries str))
+
+(ocamllex parser)
