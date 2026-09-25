@@ -1,14 +1,14 @@
 let%shared languages = [Example_i18n.En;Example_i18n.Fr]
 let%server _language_ = Example_i18n._language_
-let%server get_language () = Eliom_reference.Volatile.get _language_
+let%server get_language () = Eliom.Reference.Volatile.get _language_
 let%server set_language language = 
-Eliom_reference.Volatile.set _language_ language
+Eliom.Reference.Volatile.set _language_ language
 
 let%client _language_ = Example_i18n._language_
 let%client get_language () = !_language_
 let%client set_language language = _language_ := language
 
-let%shared txt = Eliom_content.Html.F.txt
+let%shared txt = Eliom.Content.Html.F.txt
 [%%shared
 module Tr = struct
 let welcome ?(lang = get_language ()) ()  () =

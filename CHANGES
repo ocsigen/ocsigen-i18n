@@ -1,0 +1,11 @@
+## 6.0.0 (unreleased)
+
+Breaking changes:
+* The `--eliom` mode generates code using the module names introduced by
+  Eliom 13 (`Eliom.Reference`, `Eliom.Common`, `Eliom.Content`). The
+  generated code therefore requires Eliom >= 13; use ocsigen-i18n 5.x to
+  generate code for Eliom <= 12. The other modes are unchanged.
+
+## 5.0.0
+
+See the git history for changes up to this release.

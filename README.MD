@@ -164,6 +164,9 @@ For an Eliom application, use `--eliom` to generate an `.eliom` file:
     --output-file %{target})))
 ```
 
+The generated code targets Eliom >= 13 (wrapped `Eliom.Xxx` module
+names). Use ocsigen-i18n 5.x to generate code for Eliom <= 12.
+
 ### ocsigen-i18n-rewriter
 
 `ocsigen-i18n-rewriter` is the PPX extension that will generate automatically
