@@ -13,13 +13,6 @@
  (modules i18n_rewriter))
 
 (executable
- (name i18n_generate)
- (public_name ocsigen-i18n)
- (package ocsigen-i18n)
- (modules i18n_generate)
- (libraries str))
-
-(executable
  (name i18n_ppx_checker)
  (public_name ocsigen-i18n-checker)
  (package ocsigen-i18n)
@@ -39,8 +32,6 @@
   (glob_files test/expected/*.expected))
  (action
   (run test/run_tests.sh %{bin:ocsigen-i18n})))
-
-(ocamllex i18n_generate)
 
 (env
  (_
