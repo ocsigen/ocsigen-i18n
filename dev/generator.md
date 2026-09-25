@@ -50,6 +50,7 @@ Generates Eliom client-server code:
 - Language storage uses Eliom scoped references on the server and a simple `ref` on the client
 - The type `t` has `[@@deriving json]` for client-server communication
 - Translation modules are wrapped in `[%%shared ...]`
+The generated code targets Eliom \>= 13 (wrapped `Eliom.Xxx` module names). Use ocsigen-i18n 5\.x to generate code for Eliom \<= 12\.
 
 ## Example output (default mode)
 
