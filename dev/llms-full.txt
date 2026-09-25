@@ -1,6 +1,6 @@
 # i18n
 
-> - [ocsigen-i18n](ocsigen-i18n/index.md) (version 5.0.0)
+> Ocsigen-i18n provides internationalisation (i18n) support for OCaml applications. Translations are described in TSV (tab-separated values) files; a code generator turns them into OCaml functions and a PPX extension provides a convenient `[%i18n ...]` syntax to use them.
 
 
 ---
@@ -28,7 +28,6 @@ The package provides three executables:
 - **ocsigen-i18n-rewriter**: PPX extension for the `[%i18n ...]` syntax
 - **ocsigen-i18n-checker**: PPX checker for i18n expressions
 For backward compatibility, **ocsigen-i18n-generator** is provided as an alias for `ocsigen-i18n --eliom`.
-
 
 ## Quick start
 
@@ -76,7 +75,6 @@ Add the PPX to your dune file:
 
 The `ocsigen-i18n` command reads a TSV file and produces an OCaml source file containing the translations as OCaml functions.
 
-
 ## Usage
 
 ```
@@ -98,7 +96,6 @@ ocsigen-i18n [options] [< input] [> output]
 | `--header` | Generate only the file header (types and utility functions, without translations). |
 
 ## Generation modes
-
 
 ### Default mode (no flags)
 
@@ -202,7 +199,6 @@ The command `ocsigen-i18n-generator` is provided as an alias for `ocsigen-i18n -
 
 The `ocsigen-i18n-rewriter` PPX extension transforms `[%i18n ...]` expressions into calls to the generated translation functions.
 
-
 ## Setup
 
 Add the PPX to your dune file:
@@ -248,7 +244,6 @@ With this configuration, `[%i18n Feature.foo]` becomes `Pr_Feature_i18n.Tr.foo (
 
 Translations are defined in a TSV file. The first column is the key (used as the OCaml function name). The following columns are the translations for each language, in the order specified by the `--languages` option.
 
-
 ## Simple strings
 
 ```
@@ -288,9 +283,20 @@ baz	There {{{c?are||is}}} apple{{{c?s||}}} here!	Il y a {{{c?des||une}}} pomme{{
 
 ---
 
-# OCaml Package Documentation
+# Ocsigen-i18n
 
-- [ocsigen-i18n](ocsigen-i18n/index.md) (version 5.0.0)
+Ocsigen-i18n provides internationalisation (i18n) support for OCaml applications. Translations are described in TSV (tab-separated values) files; a code generator turns them into OCaml functions and a PPX extension provides a convenient `[%i18n ...]` syntax to use them.
+
+## Manual
+
+- [Introduction](./intro.md) — overview, installation and quick start
+- [Code generator](./generator.md) — the `ocsigen-i18n` command and its options
+- [PPX rewriter](./ppx.md) — the `[%i18n ...]` syntax
+- [Template syntax](./templates.md) — how to write the TSV translation files
+
+## API
+
+- [`Ppx`](./Ppx.md) — the PPX rewriter library
 
 
 ---

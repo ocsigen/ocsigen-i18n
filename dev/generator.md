@@ -1,8 +1,6 @@
-
 # Code generator
 
 The `ocsigen-i18n` command reads a TSV file and produces an OCaml source file containing the translations as OCaml functions.
-
 
 ## Usage
 
@@ -25,7 +23,6 @@ ocsigen-i18n [options] [< input] [> output]
 | `--header` | Generate only the file header (types and utility functions, without translations). |
 
 ## Generation modes
-
 
 ### Default mode (no flags)
 

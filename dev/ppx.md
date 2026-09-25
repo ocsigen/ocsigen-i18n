@@ -1,8 +1,6 @@
-
 # PPX rewriter
 
 The `ocsigen-i18n-rewriter` PPX extension transforms `[%i18n ...]` expressions into calls to the generated translation functions.
-
 
 ## Setup
 

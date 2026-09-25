@@ -1,4 +1,3 @@
-
 # Module `Ppx.I18n_ppx_rewriter`
 
 ```ocaml

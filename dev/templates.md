@@ -1,8 +1,6 @@
-
 # Template syntax
 
 Translations are defined in a TSV file. The first column is the key (used as the OCaml function name). The following columns are the translations for each language, in the order specified by the `--languages` option.
-
 
 ## Simple strings
 

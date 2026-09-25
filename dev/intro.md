@@ -1,4 +1,3 @@
-
 # Introduction
 
 Ocsigen-i18n provides internationalisation (i18n) support for OCaml applications.
@@ -22,7 +21,6 @@ The package provides three executables:
 - **ocsigen-i18n-rewriter**: PPX extension for the `[%i18n ...]` syntax
 - **ocsigen-i18n-checker**: PPX checker for i18n expressions
 For backward compatibility, **ocsigen-i18n-generator** is provided as an alias for `ocsigen-i18n --eliom`.
-
 
 ## Quick start
 
