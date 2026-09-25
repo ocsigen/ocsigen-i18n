@@ -1,0 +1,11 @@
+(executable
+ (name test)
+ (libraries tyxml)
+ (preprocess
+  (pps ocsigen-i18n -- --default-module Example_i18n_tyxml)))
+
+(rule
+ (with-stdout-to
+  example_i18n_tyxml.ml
+  (run %{bin:ocsigen-i18n} --tyxml --languages en,fr --input-file
+    %{dep:example.tsv})))
