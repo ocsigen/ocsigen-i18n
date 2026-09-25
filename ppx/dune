@@ -1,0 +1,13 @@
+(library
+ (name ppx)
+ (public_name ocsigen-i18n)
+ (kind ppx_rewriter)
+ (modules ppx)
+ (libraries ppxlib))
+
+(executable
+ (name rewriter)
+ (public_name ocsigen-i18n-rewriter)
+ (package ocsigen-i18n)
+ (libraries ppx)
+ (modules rewriter))
