@@ -35,11 +35,11 @@ let check files =
     let tab_re = Str.regexp "\t" in
     let rec read acc =
       match input_line stdin with
-      | line -> begin
-        match Str.split_delim tab_re line with
+      | line ->
+        begin match Str.split_delim tab_re line with
         | a :: _ -> read (String.escaped a :: acc)
         | _ -> assert false
-      end
+        end
       | exception End_of_file -> acc
     in
     read []

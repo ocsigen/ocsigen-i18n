@@ -34,6 +34,9 @@ run_test "eliom"          --languages en,fr --input-file "$TSV" --eliom
 run_test "header"         --languages en,fr --header
 run_test "header_eliom"   --languages en,fr --header --eliom
 run_test "default_lang"   --languages en,fr --header --default-language fr
+run_test "header_tyxml"   --languages en,fr --header --tyxml
+run_test "primary"        --languages en,fr --input-file "$TEST_DIR/extra.tsv" --primary example_i18n.ml
+run_test "primary_eliom"  --languages en,fr --input-file "$TEST_DIR/extra.tsv" --primary example_i18n.eliom --eliom
 
 echo ""
 echo "$PASS passed, $FAIL failed."

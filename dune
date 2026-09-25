@@ -35,6 +35,7 @@
  (deps
   test/run_tests.sh
   test/example.tsv
+  test/extra.tsv
   (glob_files test/expected/*.expected))
  (action
   (run test/run_tests.sh %{bin:ocsigen-i18n})))

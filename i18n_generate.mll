@@ -332,6 +332,58 @@ let print_body ~tyxml output key_values primary_module =
   Format.fprintf output "\nend\n" ;
   if tyxml then Format.fprintf output "end\n"
 
+let gen_header ~tyxml ~eliom ~variants ~strings ?primary_module
+    ~default_language output =
+  if eliom then (
+    print_header_eliom output variants strings ;
+    print_list_of_languages_eliom output ~variants ;
+    print_generated_functions_eliom output ?primary_module ~default_language ()
+  ) else
+    print_header ~tyxml output variants strings primary_module default_language
+
+let gen_module ~tyxml ~eliom ~variants ~strings ?primary_module
+    ~default_language ~external_type ~key_values output =
+  if eliom then (
+    if primary_module = None && not external_type then
+      print_header_eliom output variants strings ;
+    print_list_of_languages_eliom output ~variants ;
+    print_generated_functions_eliom output ?primary_module ~default_language () ;
+    print_body_eliom output key_values
+  ) else (
+    if primary_module = None && not external_type then
+      print_header ~tyxml output variants strings primary_module default_language
+    else (match primary_module with
+        | Some module_name -> Format.fprintf output "open %s \n" module_name
+        | None -> ()) ;
+    print_body ~tyxml output key_values primary_module
+  )
+
+let with_in_chan file f =
+  match file with
+  | "-" -> f stdin
+  | file -> In_channel.with_open_text file f
+
+let with_out_chan file f =
+  match file with
+  | "-" -> f stdout
+  | file -> Out_channel.with_open_text file f
+
+let with_out_fmt file f =
+  with_out_chan file (fun out_chan ->
+      let fmt = Format.formatter_of_out_channel out_chan in
+      let r = f fmt in
+      Format.pp_print_flush fmt (); (* Explicit flush to notice IO errors. *)
+      r)
+
+let parse_file ~variants input_file =
+  with_in_chan input_file (fun in_chan ->
+      let lexbuf = Lexing.from_channel in_chan in
+      try
+        parse_lines variants [] lexbuf
+      with Failure _ ->
+        failwith
+          (Printf.sprintf "line: %d" lexbuf.Lexing.lex_curr_p.Lexing.pos_lnum))
+
 let input_file = ref "-"
 let output_file = ref "-"
 let eliom_generation = ref false
@@ -383,10 +435,6 @@ let normalize_type ?primary_module s =
   | Some module_name -> module_name ^ "." ^ constr
 
 let _ =
-  let out_chan =
-    match !output_file with
-    | "-" -> stdout
-    | file -> open_out file in
   let primary_module = match !primary_file with
     | "" -> None
     | file -> let base = Filename.remove_extension file in
@@ -404,41 +452,16 @@ let _ =
       let x = normalize_type ?primary_module x in
       assert (List.mem x variants) ;
       x in
-  let output = Format.formatter_of_out_channel out_chan in
-  let tyxml = !tyxml_generation in
-  if !header then (
-    if !eliom_generation then (
-      print_header_eliom output variants strings ;
-      print_list_of_languages_eliom output ~variants ;
-      print_generated_functions_eliom output ?primary_module ~default_language ()
-    ) else
-      print_header ~tyxml output variants strings primary_module default_language
-  ) else (
-    let in_chan =
-      match !input_file with
-      | "-" -> stdin
-      | file -> open_in file in
-    let lexbuf = Lexing.from_channel in_chan in
-    (try
-       let key_values = parse_lines variants [] lexbuf in
-       if !eliom_generation then (
-         if primary_module = None && not !external_type then
-           print_header_eliom output variants strings ;
-         print_list_of_languages_eliom output ~variants ;
-         print_generated_functions_eliom output ?primary_module ~default_language () ;
-         print_body_eliom output key_values
-       ) else (
-         if primary_module = None && not !external_type then
-           print_header ~tyxml output variants strings primary_module default_language
-         else (match primary_module with
-           | Some module_name -> Format.fprintf output "open %s \n" module_name
-           | None -> ()) ;
-         print_body ~tyxml output key_values primary_module
-       )
-     with Failure _ ->
-       failwith (Printf.sprintf "line: %d"
-                   lexbuf.Lexing.lex_curr_p.Lexing.pos_lnum)) ;
-    close_in in_chan
-  ) ;
-  close_out out_chan
+  with_out_fmt !output_file (fun output ->
+      let tyxml = !tyxml_generation in
+      let eliom = !eliom_generation in
+      if !header then
+        gen_header ~tyxml ~eliom ~variants ~strings ?primary_module
+          ~default_language output
+      else (
+        let key_values = parse_file ~variants !input_file in
+        gen_module ~tyxml ~eliom ~variants ~strings ?primary_module
+          ~default_language ~external_type:!external_type ~key_values output
+      )
+    )
 }

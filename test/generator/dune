@@ -1,0 +1,9 @@
+; Ensure there's no backtrace in test output
+
+(env
+ (_
+  (env-vars
+   (OCAMLRUNPARAM ""))))
+
+(cram
+ (deps %{bin:ocsigen-i18n}))
