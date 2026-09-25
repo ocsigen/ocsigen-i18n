@@ -1,22 +1,41 @@
   $ dune build
 
-  $ ocamlc -stop-after parsing -dsource _build/default/test.ml
+  $ ocamlc -stop-after parsing -dsource _build/default/test.pp.ml
+  [@@@ocaml.ppx.context
+    {
+      tool_name = "ppx_driver";
+      include_dirs = [];
+      hidden_include_dirs = [];
+      load_path = ([], []);
+      open_modules = [];
+      for_package = None;
+      debug = false;
+      use_threads = false;
+      use_vmthreads = false;
+      recursive_types = false;
+      principal = false;
+      no_alias_deps = false;
+      unboxed_types = false;
+      unsafe_string = false;
+      cookies = []
+    }]
   let () =
-    print_endline ([%i18n foo]);
-    print_endline ([%i18n bar ~x:([%i18n a_human])]);
-    print_endline ([%i18n baz]);
-    print_endline ([%i18n baz ~c:true]);
-    print_endline ([%i18n bu ~x:([%i18n a_human]) ~n:42]);
-    print_endline ([%i18n foo ~lang:Example_i18n.Fr]);
+    print_endline (Example_i18n.Tr.foo () ());
     print_endline
-      ([%i18n
-         bar ~lang:Example_i18n.Fr ~x:([%i18n a_human ~lang:Example_i18n.Fr])]);
-    print_endline ([%i18n baz ~lang:Example_i18n.Fr]);
-    print_endline ([%i18n baz ~lang:Example_i18n.Fr ~c:true]);
+      (Example_i18n.Tr.bar () ~x:(Example_i18n.Tr.a_human () ()) ());
+    print_endline (Example_i18n.Tr.baz () ());
+    print_endline (Example_i18n.Tr.baz () ~c:true ());
     print_endline
-      ([%i18n
-         bu ~lang:Example_i18n.Fr ~x:([%i18n a_human ~lang:Example_i18n.Fr])
-           ~n:42])
+      (Example_i18n.Tr.bu () ~x:(Example_i18n.Tr.a_human () ()) ~n:42 ());
+    print_endline (Example_i18n.Tr.foo () ~lang:Example_i18n.Fr ());
+    print_endline
+      (Example_i18n.Tr.bar () ~lang:Example_i18n.Fr
+         ~x:(Example_i18n.Tr.a_human () ~lang:Example_i18n.Fr ()) ());
+    print_endline (Example_i18n.Tr.baz () ~lang:Example_i18n.Fr ());
+    print_endline (Example_i18n.Tr.baz () ~lang:Example_i18n.Fr ~c:true ());
+    print_endline
+      (Example_i18n.Tr.bu () ~lang:Example_i18n.Fr
+         ~x:(Example_i18n.Tr.a_human () ~lang:Example_i18n.Fr ()) ~n:42 ())
 
   $ dune exec ./test.exe
   This is a simple key.
