@@ -1,4 +1,4 @@
-## 6.0.0 (unreleased)
+## 6.0.0 (2026-09-25)
 
 Breaking changes:
 * The `--eliom` mode generates code using the module names introduced by
