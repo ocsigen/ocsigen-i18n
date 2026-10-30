@@ -7,6 +7,11 @@ Breaking changes:
   generate code for Eliom <= 12. The other modes are unchanged.
   The opam package conflicts with Eliom < 13, so that an upgrade does not
   break an Eliom 12 project.
+* OCaml >= 4.14 is required.
+
+Fixes:
+* The generator reports write errors on its output (for example a full
+  disk) instead of exiting successfully with a truncated file.
 
 ## 5.0.0
 
