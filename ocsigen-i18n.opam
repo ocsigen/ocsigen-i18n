@@ -3,7 +3,7 @@ name:         "ocsigen-i18n"
 version:      "6.0.0"
 synopsis:     "Internationalisation of OCaml apps"
 description:  "Provides executables: ocsigen-i18n for generating an OCaml file from a file containing tab-separated values; ocsigen-i18n-rewriter for implementing a PPX syntax for referencing entries in the generated OCaml file"
-maintainer:   "BeSport Team <dev@besport.com>"
+maintainer:   "dev@ocsigen.org"
 license:      "LGPL-2.1-only with OCaml-LGPL-linking-exception"
 
 homepage: "https://github.com/ocsigen/ocsigen-i18n"
