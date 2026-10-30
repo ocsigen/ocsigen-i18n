@@ -17,6 +17,9 @@ depends: [
   "ppxlib" {>= "0.21.0"}
   "tyxml" {with-test}
 ]
+conflicts: [
+  "eliom" {< "13.0~"}
+]
 authors: "Julien Sagot"
 x-maintenance-intent: ["(latest)" ]
 
