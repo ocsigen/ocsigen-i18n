@@ -16,12 +16,14 @@ let () =
     (to_string
        [%i18n
          bar ~lang:Example_i18n_tyxml.Fr
-           ~x:[%i18n a_human ~lang:Example_i18n_tyxml.Fr]]);
+           ~x:[%i18n a_human ~lang:Example_i18n_tyxml.Fr]]
+    );
   print_endline
     (to_string
        [%i18n
          bar ~lang:Example_i18n_tyxml.Fr
-           ~x:[%i18n someone_important ~lang:Example_i18n_tyxml.Fr]]);
+           ~x:[%i18n someone_important ~lang:Example_i18n_tyxml.Fr]]
+    );
   (* == String output (S. prefix) — English == *)
   print_endline [%i18n S.foo];
   print_endline [%i18n S.bar ~x:[%i18n S.a_human]];

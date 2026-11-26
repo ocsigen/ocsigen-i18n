@@ -28,7 +28,11 @@ let expand ident ~loc:location ~path:_ expr =
       (pexp_ident __
       |> map1 ~f:(ident expr)
       ||| (pexp_apply (pexp_ident __) (many __)
-          |> map2 ~f:(fun id _ -> ident expr id)))) location expr (fun x -> x)
+          |> map2 ~f:(fun id _ -> ident expr id)
+          )
+      )
+  ) location expr (fun x -> x
+  )
 
 let check files =
   let k =
@@ -70,8 +74,10 @@ let check files =
     ignore
       (iterator#structure
          (Expansion_context.Base.top_level ~tool_name:"i18n_ppx_checker"
-            ~file_path:file ~input_name:file)
-         ast);
+            ~file_path:file ~input_name:file
+         )
+         ast
+      );
     close_in ch
   in
   List.iter process_file files;

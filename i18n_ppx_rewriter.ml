@@ -85,15 +85,18 @@ let () =
       , "SUFFIX The suffix added to module names" )
     ; ( "--default-module"
       , Arg.Set_string default_module_name
-      , "MODULE Name of the default module" ) ]
+      , "MODULE Name of the default module" )
+    ]
 
 let expand ~loc:loc0 ~path:_ expr =
   Ppxlib.Ast_pattern.(
     parse
       (pexp_ident __
       |> map1 ~f:(fun id -> apply loc0 id [])
-      ||| (pexp_apply (pexp_ident __) (many __) |> map2 ~f:(apply loc0))))
-    loc0 expr (fun x -> x)
+      ||| (pexp_apply (pexp_ident __) (many __) |> map2 ~f:(apply loc0))
+      )
+  ) loc0 expr (fun x -> x
+  )
 
 let extension =
   Ppxlib.Extension.declare "i18n" Ppxlib.Extension.Context.expression
