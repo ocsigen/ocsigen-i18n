@@ -6,6 +6,7 @@
 ;; (no odoc-driver). The manual (doc/*.mld) and the API live under ocsigen-i18n/.
 (project ocsigen-i18n)
 (title i18n)
+(llms (title "Ocsigen i18n"))  ; the llms.txt index (for AIs): the site label is short
 (url-prefix /ocsigen-i18n)
 (css /css/style.css /css/ocsigen-odoc.css)  ; shared Ocsigen theme (wodoc css default changed)
 (manual-root)
