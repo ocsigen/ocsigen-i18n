@@ -1,0 +1,6 @@
+foo	This is a simple key.	Ceci est une clé toute simple.
+a_human	a human	un humain
+bar	I am {{x}}.	Je suis {{x}}.
+baz	There {{{c?are||is an}}} apple{{{c?s||}}} here!	Il y a {{{c?des||une}}} pomme{{{c?s||}}} ici !
+bu	I am {{x %s}} ({{n %d}}).	Je suis {{x %s}} ({{n %d}}).
+someone_important	someone important	quelqu'un d'important

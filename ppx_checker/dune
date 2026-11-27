@@ -1,0 +1,5 @@
+(executable
+ (name i18n_ppx_checker)
+ (public_name ocsigen-i18n-checker)
+ (package ocsigen-i18n)
+ (libraries str ppxlib))

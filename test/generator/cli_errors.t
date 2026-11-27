@@ -1,11 +1,17 @@
   $ ocsigen-i18n
-  Fatal error: exception Failure("hd")
-  [2]
+  Usage: ocsigen-i18n [--help] [OPTION]…
+  ocsigen-i18n: required option --languages is missing
+  [124]
 
   $ ocsigen-i18n --languages ""
-  Fatal error: exception Failure("hd")
-  [2]
+  Usage: ocsigen-i18n [--help] [OPTION]…
+  ocsigen-i18n: option --languages: must define at least one language
+  [124]
 
   $ ocsigen-i18n --header --languages en,fr --default-language es
-  Fatal error: exception File "i18n_generate.mll", line 453, characters 6-12: Assertion failed
-  [2]
+  ocsigen-i18n: Default language "es" is not in --languages.
+  [123]
+
+  $ ocsigen-i18n --languages en --input-file=non_existant.tsv
+  ocsigen-i18n: non_existant.tsv: No such file or directory
+  [123]
