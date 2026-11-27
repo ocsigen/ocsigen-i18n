@@ -7,7 +7,7 @@
   [2]
 
   $ ocsigen-i18n --header --languages en,fr --default-language es
-  Fatal error: exception File "i18n_generate.mll", line 453, characters 6-12: Assertion failed
+  Fatal error: exception File "generator/main.ml", line 102, characters 8-14: Assertion failed
   [2]
 
   $ ocsigen-i18n --languages en non_existant.tsv

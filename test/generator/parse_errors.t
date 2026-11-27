@@ -29,7 +29,7 @@
   let a ?(lang = get_language ()) ()  () =
   match lang with
   | En -> "b"
-  | Fr -> Fatal error: exception File "i18n_generate.mll", line 310, characters 4-10: Assertion failed
+  | Fr -> Fatal error: exception File "generator/gen.ml", line 229, characters 10-16: Assertion failed
   [2]
 
   $ printf "a\tb\n" | ocsigen-i18n --eliom --languages en,fr
@@ -63,5 +63,5 @@
   let a ?(lang = get_language ()) ()  () =
   match lang with
   | En -> [txt "b"]
-  | Fr -> Fatal error: exception File "i18n_generate.mll", line 290, characters 4-10: Assertion failed
+  | Fr -> Fatal error: exception File "generator/gen.ml", line 214, characters 10-16: Assertion failed
   [2]
